@@ -27,7 +27,7 @@ urlpatterns = [
         extra_context={'schema_url': 'openapi-schema'}
     ), name='swagger-ui'),
     path('openapi-schema.yml', get_schema_view(
-        title="sibyl",
+        title="Sibyl",
         description="AutoMod and Toxicity Profiles using ML",
         permission_classes=[AllowAny]
     ), name='openapi-schema')

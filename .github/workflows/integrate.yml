@@ -49,7 +49,6 @@ jobs:
 
     strategy:
       fail-fast: false
-      language: "python"
 
     steps:
     - name: Checkout repository
@@ -58,7 +57,7 @@ jobs:
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: ${{ language }}
+        languages: "python"
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
@@ -66,5 +65,5 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
       with:
-        category: "/language:${{language}}"
+        category: "/language:python"
 

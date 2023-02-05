@@ -16,6 +16,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v3
@@ -41,22 +42,28 @@ jobs:
       
   analyze:
     runs-on: ubuntu-latest
+
     permissions:
       actions: read
       contents: read
       security-events: write
+      
+    strategy:
+      fail-fast: false
+
     steps:
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v2
       with:
-        languages: 'python'
+        languages: "python"
 
     - name: Autobuild
       uses: github/codeql-action/autobuild@v2
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v2
-
+      with:
+        category: "/language:python"

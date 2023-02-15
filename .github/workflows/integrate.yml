@@ -10,7 +10,6 @@ on:
 
 env:
   DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  CLIENT_SECRET: ${{ secrets.CLIENT_SECRET}}
   ENV: test
 
 jobs:

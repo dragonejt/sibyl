@@ -1,2 +1,2 @@
-web: python manage.py runserver
+web: ls
 release: python manage.py makemigrations && python manage.py migrate

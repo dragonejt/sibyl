@@ -1,2 +1,2 @@
-web: python -m gunicorn --pythonpath /workspace --worker-tmp-dir /dev/shm sibyl.wsgi
+web: which gunicorn && ls
 release: python manage.py makemigrations && python manage.py migrate

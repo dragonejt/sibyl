@@ -6,12 +6,12 @@ name = "pypi"
 [packages]
 django = "*"
 django-rest-framework = "*"
-gunicorn = "*"
 dj-database-url = "*"
 psycopg2 = "*"
 coverage = "*"
 whitenoise = "*"
 pyyaml = "*"
+gunicorn = "*"
 
 [dev-packages]
 pylint = "*"

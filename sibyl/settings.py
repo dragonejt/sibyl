@@ -28,7 +28,7 @@ SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ENV") != "prod"
 
-ALLOWED_HOSTS = ["api.sibylmod.xyz", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", os.getenv("DEPLOY_URL")]
 
 
 # Application definition

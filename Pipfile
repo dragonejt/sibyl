@@ -12,6 +12,7 @@ coverage = "*"
 whitenoise = "*"
 pyyaml = "*"
 gunicorn = "*"
+uritemplate = "*"
 
 [dev-packages]
 pylint = "*"

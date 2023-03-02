@@ -1,6 +1,6 @@
 import sys
 from django.db import models
-from datetime import datetime
+from django.utils.timezone import now
 from rest_framework.serializers import ModelSerializer
 from clients.discord import get_server_info
 
@@ -15,7 +15,7 @@ def update_score(attr: dict, field: float, denom: int) -> float:
 class ToxicityProfile(models.Model):
     platform = models.CharField(max_length=20)
     platform_id = models.CharField(max_length=20)
-    last_flag = models.DateTimeField(default=datetime.utcnow, blank=True)
+    last_flag = models.DateTimeField(default=now, blank=True)
 
     toxicity = models.FloatField(default=0.5)
     severe_toxicity = models.FloatField(default=0.5)
@@ -50,7 +50,7 @@ class UserProfile(ToxicityProfile):
             scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.messages)
         for attr, score in scores.items():
             if score > 0.5:
-                self.last_flag = datetime.utcnow()
+                self.last_flag = now()
                 break
         self.messages += 1
 
@@ -84,7 +84,7 @@ class CommunityProfile(ToxicityProfile):
             scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.users)
         for attr, score in scores.items():
             if score > 0.5:
-                self.last_flag = datetime.utcnow()
+                self.last_flag = now()
                 break
 
     def area_stress_level(self) -> int:

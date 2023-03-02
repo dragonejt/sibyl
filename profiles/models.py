@@ -49,7 +49,7 @@ class UserProfile(ToxicityProfile):
         self.sexually_explicit = update_score(
             scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.messages)
         for attr, score in scores.items():
-            if score > 0.5:
+            if score.get("summaryScore").get("value") > 0.5:
                 self.last_flag = now()
                 break
         self.messages += 1
@@ -83,7 +83,7 @@ class CommunityProfile(ToxicityProfile):
         self.sexually_explicit = update_score(
             scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.users)
         for attr, score in scores.items():
-            if score > 0.5:
+            if score.get("summaryScore").get("value") > 0.5:
                 self.last_flag = now()
                 break
 

@@ -69,7 +69,7 @@ class CommunityProfile(ToxicityProfile):
 
     def ingest_message(self, scores: dict) -> None:
         if self.platform == "discord":
-            self.users = get_server_info(self.platform_id)
+            self.users = get_server_info(self.platform_id).get("approximate_member_count")
         self.toxicity = update_score(
             scores.get("TOXICITY"), self.toxicity, self.users)
         self.severe_toxicity = update_score(

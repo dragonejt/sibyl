@@ -1,4 +1,3 @@
-import sys
 from django.db import models
 from django.utils.timezone import now
 from rest_framework.serializers import ModelSerializer
@@ -14,7 +13,7 @@ def update_score(attr: dict, field: float, denom: int) -> float:
 
 class ToxicityProfile(models.Model):
     platform = models.CharField(max_length=20)
-    platform_id = models.CharField(max_length=20)
+    platform_id = models.CharField(max_length=20, unique=True)
     last_flag = models.DateTimeField(default=now, blank=True)
 
     toxicity = models.FloatField(default=0.5)

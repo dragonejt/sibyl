@@ -3,5 +3,6 @@ from profiles import views
 
 urlpatterns = [
     path("user", views.UserProfiles.as_view()),
+    path("community", views.CommunityProfiles.as_view()),
     path("message", views.ingest_message)
 ]

@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework import status
 from profiles.models import UserProfile, UserProfileSerializer, CommunityProfile, CommunityProfileSerializer
 # Create your views here.
@@ -12,6 +12,7 @@ from profiles.models import UserProfile, UserProfileSerializer, CommunityProfile
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
+    print(request.data)
     user_profile, _ = UserProfile.objects.get_or_create(
         platform=request.user.username, platform_id=request.data.get("userID"))
     community_profile, _ = CommunityProfile.objects.get_or_create(

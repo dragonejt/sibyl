@@ -2,12 +2,14 @@ import sys
 from django.db import models
 from datetime import datetime
 from rest_framework.serializers import ModelSerializer
+from clients.discord import get_server_info
 
 # Create your models here.
 
 
-def avg(new: float, score: float, denominator: int) -> float:
-    return (new + score * denominator)/(denominator + 1)
+def update_score(attr: dict, field: float, denom: int) -> float:
+    score = attr.get("summaryScore").get("value")
+    return (score + field * denom)/(denom + 1)
 
 
 class ToxicityProfile(models.Model):
@@ -28,25 +30,28 @@ class ToxicityProfile(models.Model):
 
 
 class UserProfile(ToxicityProfile):
-    messages = models.PositiveBigIntegerField()
+    messages = models.PositiveBigIntegerField(default=0)
     psycho_hazard = models.BooleanField(default=False)
 
     def ingest_message(self, scores: dict) -> None:
-        self.toxicity = avg(scores.get("toxicity"),
-                            self.toxicity, self.messages)
-        self.identity_attack = avg(scores.get("identity_attack"),
-                                   self.identity_attack, self.messages)
-        self.insult = avg(scores.get("insult"),
-                          self.insult, self.messages)
-        self.threat = avg(scores.get("threat"),
-                          self.threat, self.messages)
-        self.profanity = avg(scores.get("profanity"),
-                             self.profanity, self.messages)
-        self.sexually_explicit = avg(scores.get("sexually_explicit"),
-                                     self.sexually_explicit, self.messages)
+        self.toxicity = update_score(
+            scores.get("TOXICITY"), self.toxicity, self.messages)
+        self.severe_toxicity = update_score(
+            scores.get("SEVERE_TOXICITY"), self.severe_toxicity, self.messages)
+        self.identity_attack = update_score(
+            scores.get("IDENTITY_ATTACK"), self.identity_attack, self.messages)
+        self.insult = update_score(
+            scores.get("INSULT"), self.insult, self.messages)
+        self.threat = update_score(
+            scores.get("THREAT"), self.threat, self.messages)
+        self.profanity = update_score(
+            scores.get("PROFANITY"), self.profanity, self.messages)
+        self.sexually_explicit = update_score(
+            scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.messages)
         for attr, score in scores.items():
             if score > 0.5:
                 self.last_flag = datetime.utcnow()
+                break
         self.messages += 1
 
     def crime_coefficient(self) -> float:
@@ -56,25 +61,30 @@ class UserProfile(ToxicityProfile):
         return "#FFFFFF"
 
 
-class ServerProfile(ToxicityProfile):
-    users = models.PositiveIntegerField()
+class CommunityProfile(ToxicityProfile):
+    users = models.PositiveIntegerField(default=0)
 
     def ingest_message(self, scores: dict) -> None:
-        self.toxicity = avg(scores.get("toxicity"),
-                            self.toxicity, self.users)
-        self.identity_attack = avg(scores.get("identity_attack"),
-                                   self.identity_attack, self.users)
-        self.insult = avg(scores.get("insult"),
-                          self.insult, self.users)
-        self.threat = avg(scores.get("threat"),
-                          self.threat, self.users)
-        self.profanity = avg(scores.get("profanity"),
-                             self.profanity, self.users)
-        self.sexually_explicit = avg(scores.get("sexually_explicit"),
-                                     self.sexually_explicit, self.users)
+        self.users = get_server_info(
+            request.data.get("communityID")).get("approximate_member_count")
+        self.toxicity = update_score(
+            scores.get("TOXICITY"), self.toxicity, self.users)
+        self.severe_toxicity = update_score(
+            scores.get("SEVERE_TOXICITY"), self.severe_toxicity, self.users)
+        self.identity_attack = update_score(
+            scores.get("IDENTITY_ATTACK"), self.identity_attack, self.users)
+        self.insult = update_score(
+            scores.get("INSULT"), self.insult, self.users)
+        self.threat = update_score(
+            scores.get("THREAT"), self.threat, self.users)
+        self.profanity = update_score(
+            scores.get("PROFANITY"), self.profanity, self.users)
+        self.sexually_explicit = update_score(
+            scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.users)
         for attr, score in scores.items():
             if score > 0.5:
                 self.last_flag = datetime.utcnow()
+                break
 
     def area_stress_level(self) -> int:
         return 0
@@ -86,7 +96,7 @@ class UserProfileSerializer(ModelSerializer):
         fields = "__all__"
 
 
-class ServerProfileSerializer(ModelSerializer):
+class CommunityProfileSerializer(ModelSerializer):
     class Meta:
-        model = ServerProfile
+        model = CommunityProfile
         fields = "__all__"

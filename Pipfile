@@ -13,6 +13,7 @@ whitenoise = "*"
 pyyaml = "*"
 gunicorn = "*"
 uritemplate = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "*"

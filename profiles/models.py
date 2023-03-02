@@ -15,7 +15,7 @@ def update_score(attr: dict, field: float, denom: int) -> float:
 class ToxicityProfile(models.Model):
     platform = models.CharField(max_length=20)
     platform_id = models.CharField(max_length=20)
-    last_flag = models.DateTimeField(auto_now_add=True, blank=True)
+    last_flag = models.DateTimeField(default=datetime.utcnow, blank=True)
 
     toxicity = models.FloatField(default=0.5)
     severe_toxicity = models.FloatField(default=0.5)

@@ -13,9 +13,9 @@ from profiles.models import UserProfile, UserProfileSerializer, CommunityProfile
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
     user_profile, _ = UserProfile.objects.get_or_create(
-        platform=request.user.name, platform_id=request.data.get("userID"))
+        platform=request.user.username, platform_id=request.data.get("userID"))
     community_profile, _ = CommunityProfile.objects.get_or_create(
-        platform=request.user.name, platform_id=request.data.get("communityID"))
+        platform=request.user.username, platform_id=request.data.get("communityID"))
 
     user_profile.ingest_message(request.data.get("attributeScores"))
     user_profile.save()

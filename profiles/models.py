@@ -65,8 +65,9 @@ class CommunityProfile(ToxicityProfile):
     users = models.PositiveIntegerField(default=0)
 
     def ingest_message(self, scores: dict) -> None:
-        self.users = get_server_info(
-            request.data.get("communityID")).get("approximate_member_count")
+        if self.platform == "discord":
+            self.users = get_server_info(
+                request.data.get("communityID")).get("approximate_member_count")
         self.toxicity = update_score(
             scores.get("TOXICITY"), self.toxicity, self.users)
         self.severe_toxicity = update_score(

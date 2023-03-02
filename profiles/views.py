@@ -6,25 +6,16 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 from profiles.models import UserProfile, UserProfileSerializer, CommunityProfile, CommunityProfileSerializer
-from clients.discord import get_server_info
 # Create your views here.
 
 
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
-    user_profile = UserProfile.objects.get(
-        platform_id=request.data.get("userID"))
-    community_profile = CommunityProfile.objects.get(
-        platform_id=request.data.get("communityID"))
-    if user_profile is None:
-        user_profile = UserProfile.objects.create(
-            platform=request.user.name, platform_id=request.data.get("userID"), last_flag=datetime.utcnow())
-    if community_profile is None:
-        num_users = get_server_info(request.data.get(
-            "communityID")).get("approximate_member_count")
-        community_profile = CommunityProfile.objects.create(platform=request.user.name, platform_id=request.data.get(
-            "userID"), last_flag=datetime.utcnow(), users=num_users)
+    user_profile, _ = UserProfile.objects.get_or_create(
+        platform=request.user.name, platform_id=request.data.get("userID"))
+    community_profile, _ = CommunityProfile.objects.get_or_create(
+        platform=request.user.name, platform_id=request.data.get("communityID"))
 
     user_profile.ingest_message(request.data.get("attributeScores"))
     user_profile.save()

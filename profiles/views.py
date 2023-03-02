@@ -37,7 +37,7 @@ class UserProfiles(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        user_profile = UserProfile.objects.get(platform_id=request.get("ID"))
+        user_profile = UserProfile.objects.get(platform_id=request.query_params.get("ID"))
         if user_profile is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         data = UserProfileSerializer(user_profile).data

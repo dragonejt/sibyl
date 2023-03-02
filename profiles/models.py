@@ -29,7 +29,7 @@ class ToxicityProfile(models.Model):
         abstract = True
     
     def __str__(self):
-        return "{}/{}".format(self.platform, self.platform_id)
+        return f"{self.platform}/{self.platform_id}"
 
 
 class UserProfile(ToxicityProfile):

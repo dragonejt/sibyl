@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
 from rest_framework.serializers import ModelSerializer
-from clients.discord import get_server_info
 
 # Create your models here
 
@@ -45,19 +44,17 @@ class UserProfile(models.Model):
                 break
         self.messages += 1
 
-    @property
     def crime_coefficient(self) -> int:
         base = 100
-        base += self.get_coefficient(self.toxicity, 200)
-        base += self.get_coefficient(self.severe_toxicity, 100)
-        base += self.get_coefficient(self.identity_attack, 100)
-        base += self.get_coefficient(self.insult, 100)
-        base += self.get_coefficient(self.threat, 100)
-        base += self.get_coefficient(self.profanity, 100)
-        base += self.get_coefficient(self.sexually_explicit, 100)
+        base += (self.toxicity - 0.5) * 200
+        base += (self.severe_toxicity - 0.5) * 100
+        base += (self.identity_attack - 0.5) * 100
+        base += (self.insult - 0.5) * 100
+        base += (self.threat - 0.5) * 100
+        base += (self.profanity - 0.5) * 100
+        base += (self.sexually_explicit - 0.5) * 100
         return int(max(0, min(500, base)))
 
-    @property
     def hue(self) -> str:
         return "#{}{}{}{}{}{}".format(
             self.get_hex(self.threat),
@@ -73,13 +70,6 @@ class UserProfile(models.Model):
         score = (attribute_score + field * denom)/(denom + 1)
         return max(0, min(1, score))
 
-    def get_coefficient(self, score: float, weight: int) -> float:
-        if score >= 0.5:
-            return max(0, (score - 0.5) * weight)
-
-        else:
-            return max(0, (score / 0.5) * weight)
-
     def get_hex(self, score: float) -> str:
         div = 1.0 / 16
         i = max(0, min(15, 15 - int(score / div)))
@@ -94,43 +84,35 @@ class CommunityProfile(models.Model):
     def __str__(self):
         return f"{self.platform}/{self.platform_id}"
 
-    @property
-    def area_stress_level(self) -> int:
-        base = 100
-        base += (self.toxicity - 0.5) * 200
-        base += (self.severe_toxicity - 0.5) * 100
-        base += (self.identity_attack - 0.5) * 100
-        base += (self.insult - 0.5) * 100
-        base += (self.threat - 0.5) * 100
-        base += (self.profanity - 0.5) * 100
-        base += (self.sexually_explicit - 0.5) * 100
-        return int(max(0, min(500, base)))
+    def area_stress_level(self) -> dict:
+        return {
+            "toxicity": self.toxicity(),
+            "severe_toxicity": self.severe_toxicity(),
+            "identity_attack": self.identity_attack(),
+            "insult": self.insult(),
+            "threat": self.threat(),
+            "profanity": self.profanity(),
+            "sexually_explicit": self.sexually_explicit()
+        }
 
-    @property
     def toxicity(self) -> float:
         return self.users.aggregate(models.Avg("toxicity")).get("toxicity__avg")
 
-    @property
     def severe_toxicity(self) -> float:
         return self.users.aggregate(models.Avg("severe_toxicity")).get("severe_toxicity__avg")
 
-    @property
     def identity_attack(self) -> float:
         return self.users.aggregate(models.Avg("identity_attack")).get("identity_attack__avg")
 
-    @property
     def insult(self) -> float:
         return self.users.aggregate(models.Avg("insult")).get("insult__avg")
 
-    @property
     def threat(self) -> float:
         return self.users.aggregate(models.Avg("threat")).get("threat__avg")
 
-    @property
     def profanity(self) -> float:
         return self.users.aggregate(models.Avg("profanity")).get("profanity__avg")
 
-    @property
     def sexually_explicit(self) -> float:
         return self.users.aggregate(models.Avg("sexually_explicit")).get("sexually_explicit__avg")
 

@@ -62,7 +62,7 @@ class CommunityProfiles(APIView):
 
     def post(self, request: Request) -> Response:
         community_profile = CommunityProfile.objects.create(
-            platform=request.user.username, platform_id=request.data.get("userID"))
+            platform=request.user.username, platform_id=request.data.get("communityID"))
         community_profile.save()
         return Response(serialize_community(community_profile), status=status.HTTP_201_CREATED)
 

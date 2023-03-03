@@ -18,11 +18,11 @@ def ingest_message(request: Request) -> Response:
 
     user_profile.ingest_message(request.data.get("attributeScores"))
     user_profile.save()
-    community_profile.ingest_message(request.data.get("attributeScores"))
+    community_profile.users.add(user_profile)
     community_profile.save()
     return Response({
-        "user": serialize_user(user_profile),
-        "community": serialize_community(community_profile)
+        "user": UserProfileSerializer(user_profile).data,
+        "community": CommunityProfileSerializer(community_profile).data
     }, status=status.HTTP_202_ACCEPTED)
 
 
@@ -34,13 +34,13 @@ class UserProfiles(APIView):
             platform_id=request.query_params.get("id"))
         if user_profile is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(serialize_user(user_profile), status=status.HTTP_200_OK)
+        return Response(UserProfileSerializer(user_profile).data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
         user_profile = UserProfile.objects.create(
             platform=request.user.username, platform_id=request.data.get("userID"))
         user_profile.save()
-        return Response(serialize_user(user_profile), status=status.HTTP_201_CREATED)
+        return Response(UserProfileSerializer(user_profile).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
         user_profile = UserProfile.objects.get(
@@ -58,13 +58,13 @@ class CommunityProfiles(APIView):
             platform_id=request.query_params.get("id"))
         if community_profile is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(serialize_community(community_profile), status=status.HTTP_200_OK)
+        return Response(CommunityProfileSerializer(community_profile).data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
         community_profile = CommunityProfile.objects.create(
             platform=request.user.username, platform_id=request.data.get("communityID"))
         community_profile.save()
-        return Response(serialize_community(community_profile), status=status.HTTP_201_CREATED)
+        return Response(CommunityProfileSerializer(community_profile).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
         community_profile = CommunityProfile.objects.get(
@@ -76,12 +76,12 @@ class CommunityProfiles(APIView):
 
 def serialize_user(user_profile: UserProfile) -> dict:
     data = UserProfileSerializer(user_profile).data
-    data["crime_coefficient"] = user_profile.crime_coefficient()
-    data["hue"] = user_profile.hue()
+    # data["crime_coefficient"] = user_profile.crime_coefficient()
+    # data["hue"] = user_profile.hue()
     return data
 
 
 def serialize_community(community_profile: CommunityProfile) -> dict:
     data = CommunityProfileSerializer(community_profile).data
-    data["area_stress_level"] = community_profile.area_stress_level()
+    # data["area_stress_level"] = community_profile.area_stress_level()
     return data

@@ -18,7 +18,7 @@ def ingest_message(request: Request) -> Response:
 
     user_profile.ingest_message(request.data.get("attributeScores"))
     user_profile.save()
-    community_profile.ingest_message(request.data.get("attributeScores"))
+    community_profile.users.add(user_profile)
     community_profile.save()
     return Response({
         "user": serialize_user(user_profile),

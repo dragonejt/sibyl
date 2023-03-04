@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("ENV") != "prod"
+DEBUG = os.getenv("ENV") != "production"
 
 ALLOWED_HOSTS = [os.getenv("DEPLOY_HOST")]
 

@@ -42,17 +42,17 @@ class UserProfile(models.Model):
             if score.get("summaryScore").get("value") > 0.5:
                 self.last_flag = now()
                 break
-        self.messages += 1
+        self.messages = max(0, min(500, self.messages+1))
 
     def crime_coefficient(self) -> int:
         base = 100
-        base += (self.toxicity - 0.5) * 200
-        base += (self.severe_toxicity - 0.5) * 100
-        base += (self.identity_attack - 0.5) * 100
-        base += (self.insult - 0.5) * 100
-        base += (self.threat - 0.5) * 100
-        base += (self.profanity - 0.5) * 100
-        base += (self.sexually_explicit - 0.5) * 100
+        base += (self.toxicity - 0.5) * 500
+        base += (self.severe_toxicity - 0.5) * 50
+        base += (self.identity_attack - 0.5) * 50
+        base += (self.insult - 0.5) * 50
+        base += (self.threat - 0.5) * 50
+        base += (self.profanity - 0.5) * 50
+        base += (self.sexually_explicit - 0.5) * 50
         return int(max(0, min(500, base)))
 
     def hue(self) -> str:

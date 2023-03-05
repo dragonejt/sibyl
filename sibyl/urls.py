@@ -23,13 +23,14 @@ from rest_framework.permissions import AllowAny
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('profiles/', include("profiles.urls")),
-    path('', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url': 'openapi-schema'}
-    ), name='swagger-ui'),
+    path('managers/', include("managers.urls")),
     path('openapi-schema.yml', get_schema_view(
         title="Sibyl API",
         description="AutoMod and Toxicity Profiles using ML",
         permission_classes=[AllowAny]
-    ), name='openapi-schema')
+    ), name='openapi-schema'),
+    path('', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
 ]

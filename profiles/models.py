@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     profanity = models.FloatField(default=0.5)
     sexually_explicit = models.FloatField(default=0.5)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"
 
     def ingest_message(self, scores: dict) -> None:
@@ -81,7 +81,7 @@ class CommunityProfile(models.Model):
     platform_id = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(UserProfile, blank=True)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"
 
     def area_stress_level(self) -> dict:

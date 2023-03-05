@@ -16,9 +16,14 @@ class Actions(models.IntegerChoices):
 class MessageManager(models.Model):
     profile = models.OneToOneField(CommunityProfile, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f"{self.profile.platform}/{self.profile.platform_id}"
+
     # For Discord Servers Only
-    discord_log_channel = models.CharField(max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(max_length=20, blank=True, null=True)
+    discord_log_channel = models.CharField(
+        max_length=20, blank=True, null=True)
+    discord_notify_target = models.CharField(
+        max_length=20, blank=True, null=True)
 
     crime_coefficient_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
@@ -56,9 +61,14 @@ class MessageManager(models.Model):
 class MemberManager(models.Model):
     profile = models.OneToOneField(CommunityProfile, on_delete=models.CASCADE)
 
+    def __str__(self) -> str:
+        return f"{self.profile.platform}/{self.profile.platform_id}"
+
     # For Discord Servers Only
-    discord_log_channel = models.CharField(max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(max_length=20, blank=True, null=True)
+    discord_log_channel = models.CharField(
+        max_length=20, blank=True, null=True)
+    discord_notify_target = models.CharField(
+        max_length=20, blank=True, null=True)
 
     crime_coefficient_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

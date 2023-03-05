@@ -26,7 +26,7 @@ def ingest_message(request: Request) -> Response:
     }, status=status.HTTP_202_ACCEPTED)
 
 
-class UserProfiles(APIView):
+class UserProfileView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
@@ -50,7 +50,7 @@ class UserProfiles(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class CommunityProfiles(APIView):
+class CommunityProfileView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:

@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 from profiles.models import UserProfile, UserProfileSerializer, CommunityProfile, CommunityProfileSerializer
+from managers.models import MemberManager, MessageManager
 # Create your views here.
 
 
@@ -64,6 +65,10 @@ class CommunityProfileView(APIView):
         community_profile = CommunityProfile.objects.create(
             platform=request.user.username, platform_id=request.data.get("communityID"))
         community_profile.save()
+        message_manager = MessageManager.objects.create(profile=community_profile)
+        message_manager.save()
+        member_manager = MemberManager.objects.create(profile=community_profile)
+        member_manager.save()
         return Response(serialize_community(community_profile), status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:

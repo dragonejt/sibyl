@@ -17,15 +17,6 @@ class MessageManagerView(APIView):
 
         return Response(MessageManagerSerializer(message_manager).data, status=status.HTTP_200_OK)
 
-    def post(self, request: Request) -> Response:
-        community_profile = CommunityProfile.objects.get(
-            platform_id=request.data.get("communityID"))
-        message_manager = MessageManager.objects.create(
-            profile=community_profile)
-        message_manager.save()
-
-        return Response(MessageManagerSerializer(message_manager).data, status=status.HTTP_201_CREATED)
-
     def put(self, request: Request) -> Response:
         community_profile = CommunityProfile.objects.get(
             platform_id=request.data.get("communityID"))
@@ -55,15 +46,6 @@ class MemberManagerView(APIView):
         member_manager = MemberManager.objects.get(profile=community_profile)
 
         return Response(MemberManagerSerializer(member_manager).data, status=status.HTTP_200_OK)
-
-    def post(self, request: Request) -> Response:
-        community_profile = CommunityProfile.objects.get(
-            platform_id=request.data.get("communityID"))
-        member_manager = MemberManager.objects.create(
-            profile=community_profile)
-        member_manager.save()
-
-        return Response(MemberManagerSerializer(member_manager).data, status=status.HTTP_201_CREATED)
 
     def put(self, request: Request) -> Response:
         community_profile = CommunityProfile.objects.get(

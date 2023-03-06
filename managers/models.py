@@ -25,10 +25,6 @@ class MessageManager(models.Model):
     discord_notify_target = models.CharField(
         max_length=20, blank=True, null=True)
 
-    crime_coefficient_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
-    crime_coefficient_trigger = models.PositiveIntegerField(default=100)
-
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
     toxicity_trigger = models.FloatField(default=0.5)

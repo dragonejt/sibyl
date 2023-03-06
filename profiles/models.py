@@ -47,12 +47,12 @@ class UserProfile(models.Model):
     def crime_coefficient(self) -> int:
         base = 100
         base += (self.toxicity - 0.5) * 500
-        base += (self.severe_toxicity - 0.5) * 50
-        base += (self.identity_attack - 0.5) * 50
-        base += (self.insult - 0.5) * 50
-        base += (self.threat - 0.5) * 50
-        base += (self.profanity - 0.5) * 50
-        base += (self.sexually_explicit - 0.5) * 50
+        base += max(0, (self.severe_toxicity - 0.5)) * 50
+        base += max(0, (self.identity_attack - 0.5)) * 50
+        base += max(0, (self.insult - 0.5)) * 50
+        base += max(0, (self.threat - 0.5)) * 50
+        base += max(0, (self.profanity - 0.5)) * 50
+        base += max(0, (self.sexually_explicit - 0.5)) * 50
         return int(max(0, min(500, base)))
 
     def hue(self) -> str:

@@ -66,9 +66,10 @@ class MemberManager(models.Model):
     discord_notify_target = models.CharField(
         max_length=20, blank=True, null=True)
 
-    crime_coefficient_action = models.IntegerField(
+    crime_coefficient_100_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    crime_coefficient_trigger = models.PositiveIntegerField(default=100)
+    crime_coefficient_300_action = models.IntegerField(
+        choices=Actions.choices, default=Actions.BAN)
 
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

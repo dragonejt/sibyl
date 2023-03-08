@@ -21,8 +21,8 @@ class UserPsychoPass(models.Model):
     sexually_explicit = models.FloatField(default=0.5)
 
     class Meta:
-        verbose_name = _("Psycho-Pass")
-        verbose_name_plural = _("Psycho-Passes")
+        verbose_name = "Psycho-Pass"
+        verbose_name_plural = "Psycho-Passes"
 
     def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"
@@ -86,8 +86,8 @@ class CommunityPsychoPass(models.Model):
     users = models.ManyToManyField(UserPsychoPass, blank=True)
 
     class Meta:
-        verbose_name = _("Community Psycho-Pass")
-        verbose_name_plural = _("Community Psycho-Passes")
+        verbose_name = "Community Psycho-Pass"
+        verbose_name_plural = "Community Psycho-Passes"
 
     def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"

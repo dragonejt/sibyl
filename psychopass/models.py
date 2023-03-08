@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 # Create your models here
 
 
-class UserProfile(models.Model):
+class UserPsychoPass(models.Model):
     platform = models.CharField(max_length=20)
     platform_id = models.CharField(max_length=20, unique=True)
     last_flag = models.DateTimeField(default=now, blank=True)
@@ -76,10 +76,10 @@ class UserProfile(models.Model):
         return f"{i:x}".capitalize()
 
 
-class CommunityProfile(models.Model):
+class CommunityPsychoPass(models.Model):
     platform = models.CharField(max_length=20)
     platform_id = models.CharField(max_length=20, unique=True)
-    users = models.ManyToManyField(UserProfile, blank=True)
+    users = models.ManyToManyField(UserPsychoPass, blank=True)
 
     def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"
@@ -117,13 +117,13 @@ class CommunityProfile(models.Model):
         return self.users.aggregate(models.Avg("sexually_explicit")).get("sexually_explicit__avg")
 
 
-class UserProfileSerializer(ModelSerializer):
+class UserPsychoPassSerializer(ModelSerializer):
     class Meta:
-        model = UserProfile
+        model = UserPsychoPass
         fields = "__all__"
 
 
-class CommunityProfileSerializer(ModelSerializer):
+class CommunityPsychoPassSerializer(ModelSerializer):
     class Meta:
-        model = CommunityProfile
+        model = CommunityPsychoPass
         fields = "__all__"

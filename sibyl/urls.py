@@ -19,11 +19,12 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework.permissions import AllowAny
+from dominator.views import DominatorView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('profiles/', include("profiles.urls")),
-    path('managers/', include("managers.urls")),
+    path('psychopass/', include("psychopass.urls")),
+    path('dominator', DominatorView.as_view()),
     path('openapi-schema.yml', get_schema_view(
         title="Sibyl API",
         description="AutoMod and Toxicity Profiles using ML",

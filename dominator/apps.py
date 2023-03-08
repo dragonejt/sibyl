@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ManagersConfig(AppConfig):
+class DominatorConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'managers'
+    name = 'dominator'

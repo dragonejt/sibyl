@@ -20,6 +20,10 @@ class UserPsychoPass(models.Model):
     profanity = models.FloatField(default=0.5)
     sexually_explicit = models.FloatField(default=0.5)
 
+    class Meta:
+        verbose_name = _("Psycho-Pass")
+        verbose_name_plural = _("Psycho-Passes")
+
     def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"
 
@@ -80,6 +84,10 @@ class CommunityPsychoPass(models.Model):
     platform = models.CharField(max_length=20)
     platform_id = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(UserPsychoPass, blank=True)
+
+    class Meta:
+        verbose_name = _("Community Psycho-Pass")
+        verbose_name_plural = _("Community Psycho-Passes")
 
     def __str__(self) -> str:
         return f"{self.platform}/{self.platform_id}"

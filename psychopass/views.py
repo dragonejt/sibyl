@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status
 from psychopass.models import UserPsychoPass, UserPsychoPassSerializer, CommunityPsychoPass, CommunityPsychoPassSerializer
-from dominator.models import Dominator
+from dominator.models import MemberDominator, MessageDominator
 # Create your views here.
 
 
@@ -65,8 +65,10 @@ class CommunityPsychoPassView(APIView):
         community_profile = CommunityPsychoPass.objects.create(
             platform=request.user.username, platform_id=request.data.get("communityID"))
         community_profile.save()
-        dominator = Dominator.objects.create(profile=community_profile)
-        dominator.save()
+        member_dominator = MemberDominator.objects.create(profile=community_profile)
+        member_dominator.save()
+        message_dominator = MessageDominator.objects.create(profile=community_profile)
+        message_dominator.save()
         return Response(serialize_community(community_profile), status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:

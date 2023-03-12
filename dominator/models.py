@@ -16,7 +16,7 @@ class Actions(models.IntegerChoices):
 class MessageDominator(models.Model):
     profile = models.OneToOneField(
         CommunityPsychoPass, on_delete=models.CASCADE)
-    
+
     class Meta:
         verbose_name = "Message Dominator"
         verbose_name_plural = "Message Dominators"
@@ -32,37 +32,37 @@ class MessageDominator(models.Model):
 
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    toxicity_trigger = models.FloatField(default=0.5)
+    toxicity_threshold = models.FloatField(default=0.5)
 
     severe_toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    severe_toxicity_trigger = models.FloatField(default=0.5)
+    severe_toxicity_threshold = models.FloatField(default=0.5)
 
     identity_attack_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    identity_attack_trigger = models.FloatField(default=0.5)
+    identity_attack_threshold = models.FloatField(default=0.5)
 
     insult_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    insult_trigger = models.FloatField(default=0.5)
+    insult_threshold = models.FloatField(default=0.5)
 
     threat_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    threat_trigger = models.FloatField(default=0.5)
+    threat_threshold = models.FloatField(default=0.5)
 
     profanity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    profanity_trigger = models.FloatField(default=0.5)
+    profanity_threshold = models.FloatField(default=0.5)
 
     sexually_explicit_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    sexually_explicit_trigger = models.FloatField(default=0.5)
+    sexually_explicit_threshold = models.FloatField(default=0.5)
 
 
 class MemberDominator(models.Model):
     profile = models.OneToOneField(
         CommunityPsychoPass, on_delete=models.CASCADE)
-    
+
     class Meta:
         verbose_name = "Member Dominator"
         verbose_name_plural = "Member Dominators"
@@ -83,37 +83,38 @@ class MemberDominator(models.Model):
 
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    toxicity_trigger = models.FloatField(default=0.5)
+    toxicity_threshold = models.FloatField(default=0.5)
 
     severe_toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    severe_toxicity_trigger = models.FloatField(default=0.5)
+    severe_toxicity_threshold = models.FloatField(default=0.5)
 
     identity_attack_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    identity_attack_trigger = models.FloatField(default=0.5)
+    identity_attack_threshold = models.FloatField(default=0.5)
 
     insult_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    insult_trigger = models.FloatField(default=0.5)
+    insult_threshold = models.FloatField(default=0.5)
 
     threat_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    threat_trigger = models.FloatField(default=0.5)
+    threat_threshold = models.FloatField(default=0.5)
 
     profanity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    profanity_trigger = models.FloatField(default=0.5)
+    profanity_threshold = models.FloatField(default=0.5)
 
     sexually_explicit_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
-    sexually_explicit_trigger = models.FloatField(default=0.5)
+    sexually_explicit_threshold = models.FloatField(default=0.5)
 
 
 class MemberDominatorSerializer(ModelSerializer):
     class Meta:
         model = MemberDominator
         fields = "__all__"
+
 
 class MessageDominatorSerializer(ModelSerializer):
     class Meta:

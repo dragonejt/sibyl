@@ -22,8 +22,11 @@ class MemberDominatorView(APIView):
             platform_id=request.data.get("communityID"))
         dominator = MemberDominator.objects.get(
             profile=community_profile)
+        trigger_data = request.data
+        trigger_data.pop("communityID")
+        trigger_data["profile"] = community_profile.id
         serializer = MemberDominatorSerializer(
-            dominator, data=request.data.get("triggers"))
+            dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
         dominator = serializer.save()
 
@@ -52,8 +55,11 @@ class MessageDominatorView(APIView):
             platform_id=request.data.get("communityID"))
         dominator = MessageDominator.objects.get(
             profile=community_profile)
+        trigger_data = request.data
+        trigger_data.pop("communityID")
+        trigger_data["profile"] = community_profile.id
         serializer = MessageDominatorSerializer(
-            dominator, data=request.data.get("triggers"))
+            dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
         dominator = serializer.save()
 

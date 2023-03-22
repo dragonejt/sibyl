@@ -12,18 +12,18 @@ from dominator.models import MemberDominator, MessageDominator
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
-    user_profile, _ = UserPsychoPass.objects.get_or_create(
+    psycho_pass, _ = UserPsychoPass.objects.get_or_create(
         platform=request.user.username, platform_id=request.data.get("userID"))
-    community_profile, _ = CommunityPsychoPass.objects.get_or_create(
+    community_psycho_pass, _ = CommunityPsychoPass.objects.get_or_create(
         platform=request.user.username, platform_id=request.data.get("communityID"))
 
-    user_profile.ingest_message(request.data.get("attributeScores"))
-    user_profile.save()
-    community_profile.users.add(user_profile)
-    community_profile.save()
+    psycho_pass.ingest_message(request.data.get("attributeScores"))
+    psycho_pass.save()
+    community_psycho_pass.users.add(psycho_pass)
+    community_psycho_pass.save()
     return Response({
-        "user": serialize_user(user_profile),
-        "community": serialize_community(community_profile)
+        "user": serialize_user(psycho_pass),
+        "community": serialize_community(community_psycho_pass)
     }, status=status.HTTP_202_ACCEPTED)
 
 
@@ -31,22 +31,22 @@ class UserPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        user_profile = UserPsychoPass.objects.get(
+        psycho_pass = UserPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        if user_profile is None:
+        if psycho_pass is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(serialize_user(user_profile), status=status.HTTP_200_OK)
+        return Response(serialize_user(psycho_pass), status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
-        user_profile = UserPsychoPass.objects.create(
+        psycho_pass = UserPsychoPass.objects.create(
             platform=request.user.username, platform_id=request.data.get("userID"))
-        user_profile.save()
-        return Response(serialize_user(user_profile), status=status.HTTP_201_CREATED)
+        psycho_pass.save()
+        return Response(serialize_user(psycho_pass), status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
-        user_profile = UserPsychoPass.objects.get(
-            platform_id=request.query_params.get("ID"))
-        user_profile.delete()
+        psycho_pass = UserPsychoPass.objects.get(
+            platform_id=request.query_params.get("id"))
+        psycho_pass.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -55,38 +55,40 @@ class CommunityPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        if community_profile is None:
+        if community_psycho_pass is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        return Response(serialize_community(community_profile), status=status.HTTP_200_OK)
+        return Response(serialize_community(community_psycho_pass), status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.create(
+        community_psycho_pass = CommunityPsychoPass.objects.create(
             platform=request.user.username, platform_id=request.data.get("communityID"))
-        community_profile.save()
-        member_dominator = MemberDominator.objects.create(profile=community_profile)
+        community_psycho_pass.save()
+        member_dominator = MemberDominator.objects.create(
+            psycho_pass=community_psycho_pass)
         member_dominator.save()
-        message_dominator = MessageDominator.objects.create(profile=community_profile)
+        message_dominator = MessageDominator.objects.create(
+            psycho_pass=community_psycho_pass)
         message_dominator.save()
-        return Response(serialize_community(community_profile), status=status.HTTP_201_CREATED)
+        return Response(serialize_community(community_psycho_pass), status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_ass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        community_profile.delete()
+        community_psycho_ass.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-def serialize_user(user_profile: UserPsychoPass) -> dict:
-    data = UserPsychoPassSerializer(user_profile).data
-    data["crime_coefficient"] = user_profile.crime_coefficient()
-    data["hue"] = user_profile.hue()
+def serialize_user(psycho_pass: UserPsychoPass) -> dict:
+    data = UserPsychoPassSerializer(psycho_pass).data
+    data["crime_coefficient"] = psycho_pass.crime_coefficient()
+    data["hue"] = psycho_pass.hue()
     return data
 
 
-def serialize_community(community_profile: CommunityPsychoPass) -> dict:
-    data = CommunityPsychoPassSerializer(community_profile).data
-    data["area_stress_level"] = community_profile.area_stress_level()
+def serialize_community(community_psycho_ass: CommunityPsychoPass) -> dict:
+    data = CommunityPsychoPassSerializer(community_psycho_ass).data
+    data["area_stress_level"] = community_psycho_ass.area_stress_level()
     return data

@@ -11,20 +11,21 @@ from dominator.models import MemberDominator, MemberDominatorSerializer, Message
 class MemberDominatorView(APIView):
 
     def get(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        dominator = MemberDominator.objects.get(profile=community_profile)
+        dominator = MemberDominator.objects.get(
+            psycho_pass=community_psycho_pass)
 
         return Response(MemberDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.data.get("communityID"))
         dominator = MemberDominator.objects.get(
-            profile=community_profile)
+            psycho_pass=community_psycho_pass)
         trigger_data = request.data
         trigger_data.pop("communityID")
-        trigger_data["profile"] = community_profile.id
+        trigger_data["psycho_pass"] = community_psycho_pass.id
         serializer = MemberDominatorSerializer(
             dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
@@ -33,9 +34,10 @@ class MemberDominatorView(APIView):
         return Response(MemberDominatorSerializer(dominator).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        dominator = MemberDominator.objects.get(profile=community_profile)
+        dominator = MemberDominator.objects.get(
+            psycho_pass=community_psycho_pass)
         dominator.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -44,20 +46,21 @@ class MemberDominatorView(APIView):
 class MessageDominatorView(APIView):
 
     def get(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        dominator = MessageDominator.objects.get(profile=community_profile)
+        dominator = MessageDominator.objects.get(
+            psycho_pass=community_psycho_pass)
 
         return Response(MessageDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.data.get("communityID"))
         dominator = MessageDominator.objects.get(
-            profile=community_profile)
+            psycho_pass=community_psycho_pass)
         trigger_data = request.data
         trigger_data.pop("communityID")
-        trigger_data["profile"] = community_profile.id
+        trigger_data["psycho_pass"] = community_psycho_pass.id
         serializer = MessageDominatorSerializer(
             dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
@@ -66,9 +69,10 @@ class MessageDominatorView(APIView):
         return Response(MessageDominatorSerializer(dominator).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
-        community_profile = CommunityPsychoPass.objects.get(
+        community_psycho_pass = CommunityPsychoPass.objects.get(
             platform_id=request.query_params.get("id"))
-        dominator = MessageDominator.objects.get(profile=community_profile)
+        dominator = MessageDominator.objects.get(
+            psycho_pass=community_psycho_pass)
         dominator.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

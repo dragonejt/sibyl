@@ -14,7 +14,7 @@ class Actions(models.IntegerChoices):
 
 
 class MessageDominator(models.Model):
-    profile = models.OneToOneField(
+    psycho_pass = models.OneToOneField(
         CommunityPsychoPass, on_delete=models.CASCADE)
 
     class Meta:
@@ -22,7 +22,7 @@ class MessageDominator(models.Model):
         verbose_name_plural = "Message Dominators"
 
     def __str__(self) -> str:
-        return f"{self.profile.platform}/{self.profile.platform_id}"
+        return f"{self.psycho_pass.platform}/{self.psycho_pass.platform_id}"
 
     # For Discord Servers Only
     discord_log_channel = models.CharField(
@@ -60,7 +60,7 @@ class MessageDominator(models.Model):
 
 
 class MemberDominator(models.Model):
-    profile = models.OneToOneField(
+    psycho_pass = models.OneToOneField(
         CommunityPsychoPass, on_delete=models.CASCADE)
 
     class Meta:
@@ -68,7 +68,7 @@ class MemberDominator(models.Model):
         verbose_name_plural = "Member Dominators"
 
     def __str__(self) -> str:
-        return f"{self.profile.platform}/{self.profile.platform_id}"
+        return f"{self.psycho_pass.platform}/{self.psycho_pass.platform_id}"
 
     # For Discord Servers Only
     discord_log_channel = models.CharField(

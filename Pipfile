@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
 dj-database-url = "*"
 psycopg2 = "*"
 coverage = "*"
@@ -12,9 +13,6 @@ whitenoise = "*"
 pyyaml = "*"
 gunicorn = "*"
 uritemplate = "*"
-requests = "*"
-cd = "*"
-djangorestframework = "*"
 
 [dev-packages]
 pylint = "*"

@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAdminUser
 from psychopass.models import CommunityPsychoPass
 from dominator.models import MemberDominator, MemberDominatorSerializer, MessageDominator, MessageDominatorSerializer
 
@@ -9,6 +10,7 @@ from dominator.models import MemberDominator, MemberDominatorSerializer, Message
 
 
 class MemberDominatorView(APIView):
+    permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
@@ -23,7 +25,7 @@ class MemberDominatorView(APIView):
             platform_id=request.data.get("communityID"))
         dominator = MemberDominator.objects.get(
             psycho_pass=community_psycho_pass)
-        trigger_data = request.data
+        trigger_data = request.data.copy()
         trigger_data.pop("communityID")
         trigger_data["psycho_pass"] = community_psycho_pass.id
         serializer = MemberDominatorSerializer(
@@ -44,6 +46,7 @@ class MemberDominatorView(APIView):
 
 
 class MessageDominatorView(APIView):
+    permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
@@ -58,7 +61,7 @@ class MessageDominatorView(APIView):
             platform_id=request.data.get("communityID"))
         dominator = MessageDominator.objects.get(
             psycho_pass=community_psycho_pass)
-        trigger_data = request.data
+        trigger_data = request.data.copy()
         trigger_data.pop("communityID")
         trigger_data["psycho_pass"] = community_psycho_pass.id
         serializer = MessageDominatorSerializer(

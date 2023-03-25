@@ -60,13 +60,13 @@ class UserPsychoPass(models.Model):
         return int(max(0, min(500, base)))
 
     def hue(self) -> str:
-        return "#{}{}{}{}{}{}".format(
+        return "{}{}{}{}{}{}".format(
             self.get_hex(self.threat),
             self.get_hex(self.sexually_explicit),
-            self.get_hex(self.identity_attack),
             self.get_hex(self.insult),
-            self.get_hex(self.severe_toxicity),
-            self.get_hex(self.toxicity)
+            self.get_hex(self.identity_attack),
+            self.get_hex(self.toxicity),
+            self.get_hex(self.severe_toxicity)
         )
 
     def update_score(self, attr: dict, field: float, denom: int) -> float:

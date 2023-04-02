@@ -25,7 +25,7 @@ urlpatterns = [
     path('psychopass/', include("psychopass.urls")),
     path('dominator/', include("dominator.urls")),
     path('openapi-schema.yml', get_schema_view(
-        title="Sibyl API",
+        title="Sibyl System API",
         description="AutoMod and Toxicity Profiles using ML",
         permission_classes=[AllowAny]
     ), name='openapi-schema'),

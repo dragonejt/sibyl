@@ -9,7 +9,7 @@ from rest_framework.serializers import ModelSerializer
 class UserPsychoPass(models.Model):
     platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     user_id = models.CharField(max_length=20, unique=True)
-    last_flag = models.DateTimeField(default=now, blank=True)
+
     messages = models.PositiveBigIntegerField(default=0)
     psycho_hazard = models.BooleanField(default=False)
 
@@ -43,10 +43,6 @@ class UserPsychoPass(models.Model):
             scores.get("PROFANITY"), self.profanity, self.messages)
         self.sexually_explicit = self.update_score(
             scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.messages)
-        for attr, score in scores.items():
-            if score.get("summaryScore").get("value") > 0.5:
-                self.last_flag = now()
-                break
         self.messages = max(0, min(500, self.messages+1))
 
     def crime_coefficient(self) -> int:

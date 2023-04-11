@@ -22,7 +22,7 @@ class MessageDominator(models.Model):
         verbose_name_plural = "Message Dominators"
 
     def __str__(self) -> str:
-        return f"{self.psycho_pass.platform}/{self.psycho_pass.platform_id}"
+        return f"{self.psycho_pass.platform.username}/{self.psycho_pass.community_id}"
 
     # For Discord Servers Only
     discord_log_channel = models.CharField(
@@ -68,7 +68,7 @@ class MemberDominator(models.Model):
         verbose_name_plural = "Member Dominators"
 
     def __str__(self) -> str:
-        return f"{self.psycho_pass.platform}/{self.psycho_pass.platform_id}"
+        return f"{self.psycho_pass.platform.username}/{self.psycho_pass.community_id}"
 
     # For Discord Servers Only
     discord_log_channel = models.CharField(

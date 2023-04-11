@@ -14,7 +14,7 @@ class MemberDominatorView(APIView):
 
     def get(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.query_params.get("id"))
+            community_id=request.query_params.get("id"))
         dominator = MemberDominator.objects.get(
             psycho_pass=community_psycho_pass)
 
@@ -22,7 +22,7 @@ class MemberDominatorView(APIView):
 
     def put(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.data.get("communityID"))
+            community_id=request.data.get("communityID"))
         dominator = MemberDominator.objects.get(
             psycho_pass=community_psycho_pass)
         trigger_data = request.data.copy()
@@ -37,7 +37,7 @@ class MemberDominatorView(APIView):
 
     def delete(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.query_params.get("id"))
+            community_id=request.query_params.get("id"))
         dominator = MemberDominator.objects.get(
             psycho_pass=community_psycho_pass)
         dominator.delete()
@@ -50,7 +50,7 @@ class MessageDominatorView(APIView):
 
     def get(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.query_params.get("id"))
+            community_id=request.query_params.get("id"))
         dominator = MessageDominator.objects.get(
             psycho_pass=community_psycho_pass)
 
@@ -58,7 +58,7 @@ class MessageDominatorView(APIView):
 
     def put(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.data.get("communityID"))
+            community_id=request.data.get("communityID"))
         dominator = MessageDominator.objects.get(
             psycho_pass=community_psycho_pass)
         trigger_data = request.data.copy()
@@ -73,7 +73,7 @@ class MessageDominatorView(APIView):
 
     def delete(self, request: Request) -> Response:
         community_psycho_pass = CommunityPsychoPass.objects.get(
-            platform_id=request.query_params.get("id"))
+            community_id=request.query_params.get("id"))
         dominator = MessageDominator.objects.get(
             psycho_pass=community_psycho_pass)
         dominator.delete()

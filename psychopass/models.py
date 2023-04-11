@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.utils.timezone import now
 from rest_framework.serializers import ModelSerializer
 
@@ -6,8 +7,8 @@ from rest_framework.serializers import ModelSerializer
 
 
 class UserPsychoPass(models.Model):
-    platform = models.CharField(max_length=20)
-    platform_id = models.CharField(max_length=20, unique=True)
+    platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    user_id = models.CharField(max_length=20, unique=True)
     last_flag = models.DateTimeField(default=now, blank=True)
     messages = models.PositiveBigIntegerField(default=0)
     psycho_hazard = models.BooleanField(default=False)
@@ -25,7 +26,7 @@ class UserPsychoPass(models.Model):
         verbose_name_plural = "Psycho-Passes"
 
     def __str__(self) -> str:
-        return f"{self.platform}/{self.platform_id}"
+        return f"{self.platform.username}/{self.user_id}"
 
     def ingest_message(self, scores: dict) -> None:
         self.toxicity = self.update_score(
@@ -81,8 +82,8 @@ class UserPsychoPass(models.Model):
 
 
 class CommunityPsychoPass(models.Model):
-    platform = models.CharField(max_length=20)
-    platform_id = models.CharField(max_length=20, unique=True)
+    platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    community_id = models.CharField(max_length=20, unique=True)
     users = models.ManyToManyField(UserPsychoPass, blank=True)
 
     class Meta:
@@ -90,7 +91,7 @@ class CommunityPsychoPass(models.Model):
         verbose_name_plural = "Community Psycho-Passes"
 
     def __str__(self) -> str:
-        return f"{self.platform}/{self.platform_id}"
+        return f"{self.platform.username}/{self.community_id}"
 
     def area_stress_level(self) -> dict:
         return {

@@ -17,13 +17,13 @@ class TestMemberDominatorView(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.community_psycho_pass = CommunityPsychoPass.objects.create(
-            platform=self.user.username, platform_id=get_random_string(20))
+            platform=self.user, community_id=get_random_string(20))
         self.dominator = MemberDominator.objects.create(
             psycho_pass=self.community_psycho_pass)
 
     def test_get(self) -> None:
         response = self.client.get(
-            f"{self.url}?id={self.community_psycho_pass.platform_id}", format="json")
+            f"{self.url}?id={self.community_psycho_pass.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
@@ -38,7 +38,7 @@ class TestMemberDominatorView(APITestCase):
         toxicity_threshold = random.random()
 
         response = self.client.put(self.url, data={
-            "communityID": self.community_psycho_pass.platform_id,
+            "communityID": self.community_psycho_pass.community_id,
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
         })
@@ -51,11 +51,11 @@ class TestMemberDominatorView(APITestCase):
         self.assertEqual(self.dominator.toxicity_threshold, toxicity_threshold)
 
     def test_delete(self) -> None:
-        community_id = self.community_psycho_pass.platform_id
-        self.assertEqual(self.community_psycho_pass.platform_id, community_id)
+        community_id = self.community_psycho_pass.community_id
+        self.assertEqual(self.community_psycho_pass.community_id, community_id)
 
         response = self.client.delete(
-            f"{self.url}?id={self.community_psycho_pass.platform_id}", format="json")
+            f"{self.url}?id={self.community_psycho_pass.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(MemberDominator.DoesNotExist):
@@ -70,13 +70,13 @@ class TestMessageDominatorView(APITestCase):
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.community_psycho_pass = CommunityPsychoPass.objects.create(
-            platform=self.user.username, platform_id=get_random_string(20))
+            platform=self.user, community_id=get_random_string(20))
         self.dominator = MessageDominator.objects.create(
             psycho_pass=self.community_psycho_pass)
 
     def test_get(self) -> None:
         response = self.client.get(
-            f"{self.url}?id={self.community_psycho_pass.platform_id}", format="json")
+            f"{self.url}?id={self.community_psycho_pass.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
@@ -91,7 +91,7 @@ class TestMessageDominatorView(APITestCase):
         toxicity_threshold = random.random()
 
         response = self.client.put(self.url, data={
-            "communityID": self.community_psycho_pass.platform_id,
+            "communityID": self.community_psycho_pass.community_id,
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
         })
@@ -104,11 +104,11 @@ class TestMessageDominatorView(APITestCase):
         self.assertEqual(self.dominator.toxicity_threshold, toxicity_threshold)
 
     def test_delete(self) -> None:
-        community_id = self.community_psycho_pass.platform_id
-        self.assertEqual(self.community_psycho_pass.platform_id, community_id)
+        community_id = self.community_psycho_pass.community_id
+        self.assertEqual(self.community_psycho_pass.community_id, community_id)
 
         response = self.client.delete(
-            f"{self.url}?id={self.community_psycho_pass.platform_id}", format="json")
+            f"{self.url}?id={self.community_psycho_pass.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(MessageDominator.DoesNotExist):

@@ -3,7 +3,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAdminUser
-from psychopass.models import CommunityPsychoPass
+from community.models import Community
 from dominator.models import MemberDominator, MemberDominatorSerializer, MessageDominator, MessageDominatorSerializer
 
 # Create your views here.
@@ -13,21 +13,18 @@ class MemberDominatorView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
+        community = Community.objects.get(
             community_id=request.query_params.get("id"))
-        dominator = MemberDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        dominator = MemberDominator.objects.get(community=community)
 
         return Response(MemberDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
-            community_id=request.data.get("communityID"))
-        dominator = MemberDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        community = Community.objects.get(
+            community_id=request.query_params.get("id"))
+        dominator = MemberDominator.objects.get(community=community)
         trigger_data = request.data.copy()
-        trigger_data.pop("communityID")
-        trigger_data["psycho_pass"] = community_psycho_pass.id
+        trigger_data["community"] = community.id
         serializer = MemberDominatorSerializer(
             dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
@@ -36,10 +33,9 @@ class MemberDominatorView(APIView):
         return Response(MemberDominatorSerializer(dominator).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
+        community = Community.objects.get(
             community_id=request.query_params.get("id"))
-        dominator = MemberDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        dominator = MemberDominator.objects.get(community=community)
         dominator.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -49,21 +45,18 @@ class MessageDominatorView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
+        community = Community.objects.get(
             community_id=request.query_params.get("id"))
-        dominator = MessageDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        dominator = MessageDominator.objects.get(community=community)
 
         return Response(MessageDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
-            community_id=request.data.get("communityID"))
-        dominator = MessageDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        community = Community.objects.get(
+            community_id=request.query_params.get("id"))
+        dominator = MessageDominator.objects.get(community=community)
         trigger_data = request.data.copy()
-        trigger_data.pop("communityID")
-        trigger_data["psycho_pass"] = community_psycho_pass.id
+        trigger_data["community"] = community.id
         serializer = MessageDominatorSerializer(
             dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
@@ -72,10 +65,9 @@ class MessageDominatorView(APIView):
         return Response(MessageDominatorSerializer(dominator).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
-        community_psycho_pass = CommunityPsychoPass.objects.get(
+        community = Community.objects.get(
             community_id=request.query_params.get("id"))
-        dominator = MessageDominator.objects.get(
-            psycho_pass=community_psycho_pass)
+        dominator = MessageDominator.objects.get(community=community)
         dominator.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

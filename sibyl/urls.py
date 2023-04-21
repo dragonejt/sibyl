@@ -22,6 +22,7 @@ from rest_framework.permissions import AllowAny
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('community', include("community.urls")),
     path('psychopass/', include("psychopass.urls")),
     path('dominator/', include("dominator.urls")),
     path('openapi-schema.yml', get_schema_view(

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.utils.timezone import now
+from community.models import Community
 from rest_framework.serializers import ModelSerializer
 
 # Create your models here
@@ -78,8 +78,7 @@ class UserPsychoPass(models.Model):
 
 
 class CommunityPsychoPass(models.Model):
-    platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
-    community_id = models.CharField(max_length=20, unique=True)
+    community = models.OneToOneField(Community, on_delete=models.CASCADE)
     users = models.ManyToManyField(UserPsychoPass, blank=True)
 
     class Meta:
@@ -87,7 +86,7 @@ class CommunityPsychoPass(models.Model):
         verbose_name_plural = "Community Psycho-Passes"
 
     def __str__(self) -> str:
-        return f"{self.platform.username}/{self.community_id}"
+        return f"{self.community.platform.username}/{self.community.community_id}"
 
     def area_stress_level(self) -> dict:
         return {

@@ -1,5 +1,6 @@
 from django.db import models
 from rest_framework.serializers import ModelSerializer
+from community.models import Community
 from psychopass.models import CommunityPsychoPass
 
 # Create your models here
@@ -14,21 +15,14 @@ class Actions(models.IntegerChoices):
 
 
 class MessageDominator(models.Model):
-    psycho_pass = models.OneToOneField(
-        CommunityPsychoPass, on_delete=models.CASCADE)
+    community = models.OneToOneField(Community, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Message Dominator"
         verbose_name_plural = "Message Dominators"
 
     def __str__(self) -> str:
-        return f"{self.psycho_pass.platform.username}/{self.psycho_pass.community_id}"
-
-    # For Discord Servers Only
-    discord_log_channel = models.CharField(
-        max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(
-        max_length=20, blank=True, null=True)
+        return f"{self.community.platform.username}/{self.community.community_id}"
 
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
@@ -60,21 +54,14 @@ class MessageDominator(models.Model):
 
 
 class MemberDominator(models.Model):
-    psycho_pass = models.OneToOneField(
-        CommunityPsychoPass, on_delete=models.CASCADE)
+    community = models.OneToOneField(Community, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Member Dominator"
         verbose_name_plural = "Member Dominators"
 
     def __str__(self) -> str:
-        return f"{self.psycho_pass.platform.username}/{self.psycho_pass.community_id}"
-
-    # For Discord Servers Only
-    discord_log_channel = models.CharField(
-        max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(
-        max_length=20, blank=True, null=True)
+        return f"{self.community.platform.username}/{self.community.community_id}"
 
     crime_coefficient_100_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

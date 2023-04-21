@@ -36,10 +36,10 @@ class CommunityView(APIView):
 
     def put(self, request: Request) -> Response:
         community = Community.objects.get(
-            community_id=request.query_params.get("id"))
+            community_id=request.data.get("communityID"))
         community_data = request.data.copy()
         community_data["platform"] = community.platform.id
-        community_data["community_id"] = request.query_params.get("id")
+        community_data["community_id"] = request.data.get("communityID")
         serializer = CommunitySerializer(community, data=community_data)
         serializer.is_valid(raise_exception=True)
         community = serializer.save()

@@ -47,16 +47,20 @@ class TestCommunityView(APITestCase):
         discord_log_channel = get_random_string(20)
         discord_notify_target = get_random_string(20)
 
-        response = self.client.put(f"{self.url}?id={self.community.community_id}", data={
+        response = self.client.put(self.url, data={
+            "communityID": self.community.community_id,
             "discord_log_channel": discord_log_channel,
             "discord_notify_target": discord_notify_target
         })
 
-        self.community = Community.objects.get(community_id=self.community.community_id)
+        self.community = Community.objects.get(
+            community_id=self.community.community_id)
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
-        self.assertEqual(self.community.discord_log_channel, discord_log_channel)
-        self.assertEqual(self.community.discord_notify_target, discord_notify_target)
+        self.assertEqual(self.community.discord_log_channel,
+                         discord_log_channel)
+        self.assertEqual(self.community.discord_notify_target,
+                         discord_notify_target)
 
     def test_delete(self) -> None:
         community_id = self.community.community_id

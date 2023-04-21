@@ -21,9 +21,10 @@ class MemberDominatorView(APIView):
 
     def put(self, request: Request) -> Response:
         community = Community.objects.get(
-            community_id=request.query_params.get("id"))
+            community_id=request.data.get("communityID"))
         dominator = MemberDominator.objects.get(community=community)
         trigger_data = request.data.copy()
+        trigger_data.pop("communityID")
         trigger_data["community"] = community.id
         serializer = MemberDominatorSerializer(
             dominator, data=trigger_data)
@@ -53,9 +54,10 @@ class MessageDominatorView(APIView):
 
     def put(self, request: Request) -> Response:
         community = Community.objects.get(
-            community_id=request.query_params.get("id"))
+            community_id=request.data.get("communityID"))
         dominator = MessageDominator.objects.get(community=community)
         trigger_data = request.data.copy()
+        trigger_data.pop("communityID")
         trigger_data["community"] = community.id
         serializer = MessageDominatorSerializer(
             dominator, data=trigger_data)

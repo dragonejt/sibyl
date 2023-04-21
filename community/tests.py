@@ -51,7 +51,7 @@ class TestCommunityView(APITestCase):
             "communityID": self.community.community_id,
             "discord_log_channel": discord_log_channel,
             "discord_notify_target": discord_notify_target
-        })
+        }, format="json")
 
         self.community = Community.objects.get(
             community_id=self.community.community_id)
@@ -65,7 +65,7 @@ class TestCommunityView(APITestCase):
     def test_delete(self) -> None:
         community_id = self.community.community_id
         response = self.client.delete(
-            f"{self.url}?id={self.community.community_id}")
+            f"{self.url}?id={self.community.community_id}", format="json")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(Community.DoesNotExist):
             Community.objects.get(platform=self.user,

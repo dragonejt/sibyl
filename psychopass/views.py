@@ -23,6 +23,7 @@ def ingest_message(request: Request) -> Response:
     psycho_pass.save()
     community_psycho_pass.users.add(psycho_pass)
     community_psycho_pass.save()
+
     return Response({
         "user": serialize_user(psycho_pass),
         "community": serialize_community(community_psycho_pass)
@@ -35,12 +36,14 @@ class UserPsychoPassView(APIView):
     def get(self, request: Request) -> Response:
         psycho_pass = UserPsychoPass.objects.get(
             user_id=request.query_params.get("id"))
+
         return Response(serialize_user(psycho_pass), status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
         psycho_pass = UserPsychoPass.objects.create(
             platform=request.user, user_id=request.data.get("userID"))
         psycho_pass.save()
+
         return Response(serialize_user(psycho_pass), status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
@@ -59,7 +62,20 @@ class CommunityPsychoPassView(APIView):
             platform=request.user, community_id=request.query_params.get("id"))
         community_psycho_pass = CommunityPsychoPass.objects.get(
             community=community)
+
         return Response(serialize_community(community_psycho_pass), status=status.HTTP_200_OK)
+
+    def put(self, request: Request) -> Response:
+        community = Community.objects.get(
+            platform=request.user, community_id=request.data.get("communityID"))
+        community_psycho_pass = CommunityPsychoPass.objects.get(
+            community=community)
+        psycho_pass = UserPsychoPass.objects.get(
+            user_id=request.data.get("userID"))
+        community_psycho_pass.users.remove(psycho_pass)
+        community_psycho_pass.save()
+
+        return Response(serialize_community(community_psycho_pass), status=status.HTTP_202_ACCEPTED)
 
 
 def serialize_user(psycho_pass: UserPsychoPass) -> dict:

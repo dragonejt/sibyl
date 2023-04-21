@@ -39,7 +39,7 @@ class TestUserPsychoPassView(APITestCase):
     def test_delete(self) -> None:
         user_id = self.psycho_pass.user_id
         response = self.client.delete(
-            f"{self.url}?id={self.psycho_pass.user_id}")
+            f"{self.url}?id={self.psycho_pass.user_id}", format="json")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(UserPsychoPass.DoesNotExist):
             UserPsychoPass.objects.get(platform=self.user, user_id=user_id)
@@ -63,6 +63,25 @@ class TestCommunityPsychoPassView(APITestCase):
         self.assertEqual(
             response.json(), serialize_community(self.psycho_pass))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_put(self) -> None:
+        self.assertEqual(self.psycho_pass.users.all().count(), 0)
+        self.user_psycho_pass = UserPsychoPass.objects.create(
+            platform=self.user, user_id=get_random_string(20))
+        self.psycho_pass.users.add(self.user_psycho_pass)
+        self.assertEqual(self.psycho_pass.users.all().count(), 1)
+
+        response = self.client.put(self.url, data={
+                                   "communityID": self.community.community_id,
+                                   "userID": self.user_psycho_pass.user_id
+                                   }, format="json")
+
+        self.psycho_pass = CommunityPsychoPass.objects.get(
+            community=self.community)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(
+            response.json(), serialize_community(self.psycho_pass))
+        self.assertEqual(self.psycho_pass.users.all().count(), 0)
 
 
 class TestIngestMessage(APITestCase):

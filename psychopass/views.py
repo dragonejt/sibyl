@@ -75,7 +75,7 @@ class CommunityPsychoPassView(APIView):
         community_psycho_pass.users.remove(psycho_pass)
         community_psycho_pass.save()
 
-        return Response(serialize_community(community_psycho_pass), status=status.HTTP_204_NO_CONTENT)
+        return Response(serialize_community(community_psycho_pass), status=status.HTTP_202_ACCEPTED)
 
 
 def serialize_user(psycho_pass: UserPsychoPass) -> dict:

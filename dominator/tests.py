@@ -41,7 +41,7 @@ class TestMemberDominatorView(APITestCase):
             "communityID": self.community.community_id,
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
-        })
+        }, format="json")
 
         self.dominator = MemberDominator.objects.get(community=self.community)
 
@@ -93,7 +93,7 @@ class TestMessageDominatorView(APITestCase):
             "communityID": self.community.community_id,
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
-        })
+        }, format="json")
 
         self.dominator = MessageDominator.objects.get(community=self.community)
 

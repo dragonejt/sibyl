@@ -24,12 +24,6 @@ class MessageDominator(models.Model):
     def __str__(self) -> str:
         return f"{self.community.platform.username}/{self.community.community_id}"
 
-    # For Discord Servers Only
-    discord_log_channel = models.CharField(
-        max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(
-        max_length=20, blank=True, null=True)
-
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
     toxicity_threshold = models.FloatField(default=0.5)
@@ -68,12 +62,6 @@ class MemberDominator(models.Model):
 
     def __str__(self) -> str:
         return f"{self.community.platform.username}/{self.community.community_id}"
-
-    # For Discord Servers Only
-    discord_log_channel = models.CharField(
-        max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(
-        max_length=20, blank=True, null=True)
 
     crime_coefficient_100_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

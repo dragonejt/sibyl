@@ -37,8 +37,7 @@ class TestMemberDominatorView(APITestCase):
         toxicity_action = random.randint(0, 4)
         toxicity_threshold = random.random()
 
-        response = self.client.put(self.url, data={
-            "communityID": self.community.community_id,
+        response = self.client.put(f"{self.url}?id={self.community.community_id}", data={
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
         })
@@ -89,8 +88,7 @@ class TestMessageDominatorView(APITestCase):
         toxicity_action = random.randint(0, 4)
         toxicity_threshold = random.random()
 
-        response = self.client.put(self.url, data={
-            "communityID": self.community.community_id,
+        response = self.client.put(f"{self.url}?id={self.community.community_id}", data={
             "toxicity_action": toxicity_action,
             "toxicity_threshold": toxicity_threshold
         })

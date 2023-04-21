@@ -34,6 +34,18 @@ class CommunityView(APIView):
 
         return Response(CommunitySerializer(community).data, status=status.HTTP_201_CREATED)
 
+    def put(self, request: Request) -> Response:
+        community = Community.objects.get(
+            community_id=request.query_params.get("id"))
+        community_data = request.data.copy()
+        community_data["platform"] = community.platform.id
+        community_data["community_id"] = request.query_params.get("id")
+        serializer = CommunitySerializer(community, data=community_data)
+        serializer.is_valid(raise_exception=True)
+        community = serializer.save()
+
+        return Response(CommunitySerializer(community).data, status=status.HTTP_202_ACCEPTED)
+
     def delete(self, request: Request) -> Response:
         community = Community.objects.get(
             platform=request.user, community_id=request.query_params.get("id"))

@@ -21,6 +21,9 @@ class MessageDominator(models.Model):
         verbose_name = "Message Dominator"
         verbose_name_plural = "Message Dominators"
 
+    def __str__(self) -> str:
+        return f"{self.platform.username}/{self.community_id} ({self.id})"
+
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
     toxicity_threshold = models.FloatField(default=0.5)
@@ -56,6 +59,9 @@ class MemberDominator(models.Model):
     class Meta:
         verbose_name = "Member Dominator"
         verbose_name_plural = "Member Dominators"
+
+    def __str__(self) -> str:
+        return f"{self.platform.username}/{self.community_id} ({self.id})"
 
     crime_coefficient_100_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

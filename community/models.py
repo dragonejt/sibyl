@@ -14,7 +14,7 @@ class Community(models.Model):
         verbose_name_plural = "Communities"
 
     def __str__(self) -> str:
-        return f"{self.platform.username}/{self.community_id}"
+        return f"{self.platform.username}/{self.community_id} ({self.id})"
 
     # For Discord Servers Only
     discord_log_channel = models.CharField(

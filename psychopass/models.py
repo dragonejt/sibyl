@@ -85,6 +85,9 @@ class CommunityPsychoPass(models.Model):
         verbose_name = "Community Psycho-Pass"
         verbose_name_plural = "Community Psycho-Passes"
 
+    def __str__(self) -> str:
+        return f"{self.platform.username}/{self.community_id} ({self.id})"
+
     def area_stress_level(self) -> dict:
         return {
             "toxicity": self.toxicity(),

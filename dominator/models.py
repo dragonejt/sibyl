@@ -22,7 +22,7 @@ class MessageDominator(models.Model):
         verbose_name_plural = "Message Dominators"
 
     def __str__(self) -> str:
-        return f"{self.platform.username}/{self.community_id} ({self.id})"
+        return f"{self.community.platform.username}/{self.community.community_id} ({self.id})"
 
     toxicity_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)
@@ -61,7 +61,7 @@ class MemberDominator(models.Model):
         verbose_name_plural = "Member Dominators"
 
     def __str__(self) -> str:
-        return f"{self.platform.username}/{self.community_id} ({self.id})"
+        return f"{self.community.platform.username}/{self.community.community_id} ({self.id})"
 
     crime_coefficient_100_action = models.IntegerField(
         choices=Actions.choices, default=Actions.NOTIFY)

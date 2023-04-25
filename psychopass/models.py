@@ -26,7 +26,7 @@ class UserPsychoPass(models.Model):
         verbose_name_plural = "Psycho-Passes"
 
     def __str__(self) -> str:
-        return f"{self.platform.username}/{self.user_id}"
+        return f"{self.platform.username}/{self.user_id} ({self.id})"
 
     def ingest_message(self, scores: dict) -> None:
         self.toxicity = self.update_score(

@@ -1,9 +1,10 @@
+from random import random
 from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 from django.utils.crypto import get_random_string
 from rest_framework import status
 from rest_framework.authtoken.models import Token
-from psychopass.views import Community, UserPsychoPass, serialize_user, CommunityPsychoPass, serialize_community
+from psychopass.views import Community, UserPsychoPass, UserPsychoPassSerializer, CommunityPsychoPass, CommunityPsychoPassSerializer
 
 # Create your tests here.
 
@@ -21,7 +22,8 @@ class TestUserPsychoPassView(APITestCase):
     def test_get(self) -> None:
         response = self.client.get(
             f"{self.url}?id={self.psycho_pass.user_id}", format="json")
-        self.assertEqual(response.json(), serialize_user(self.psycho_pass))
+        self.assertEqual(
+            response.json(), UserPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_post(self) -> None:
@@ -34,6 +36,8 @@ class TestUserPsychoPassView(APITestCase):
         self.assertEqual(psycho_pass.platform.id, self.user.id)
         self.assertEqual(response.json().get("user_id"), user_id)
         self.assertEqual(psycho_pass.user_id, user_id)
+        self.assertEqual(
+            response.json(), UserPsychoPassSerializer(psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_delete(self) -> None:
@@ -60,8 +64,9 @@ class TestCommunityPsychoPassView(APITestCase):
     def test_get(self) -> None:
         response = self.client.get(
             f"{self.url}?id={self.community.community_id}", format="json")
+
         self.assertEqual(
-            response.json(), serialize_community(self.psycho_pass))
+            response.json(), CommunityPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_put(self) -> None:
@@ -80,7 +85,7 @@ class TestCommunityPsychoPassView(APITestCase):
             community=self.community)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(
-            response.json(), serialize_community(self.psycho_pass))
+            response.json(), CommunityPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(self.psycho_pass.users.all().count(), 0)
 
 
@@ -101,43 +106,43 @@ class TestIngestMessage(APITestCase):
             "attributeScores": {
                 "TOXICITY": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "SEVERE_TOXICITY": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "IDENTITY_ATTACK": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "INSULT": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "THREAT": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "PROFANITY": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 },
                 "SEXUALLY_EXPLICIT": {
                     "summaryScore": {
-                        "value": 0.5,
+                        "value": random(),
                         "type": "PROBABILITY"
                     }
                 }
@@ -147,4 +152,6 @@ class TestIngestMessage(APITestCase):
             "communityID": self.community.community_id
         }, format="json")
 
+        self.assertEqual(response.json().get("community"),
+                         CommunityPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)

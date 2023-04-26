@@ -25,8 +25,8 @@ def ingest_message(request: Request) -> Response:
     community_psycho_pass.save()
 
     return Response({
-        "user": serialize_user(psycho_pass),
-        "community": serialize_community(community_psycho_pass)
+        "user": UserPsychoPassSerializer(psycho_pass).data,
+        "community": CommunityPsychoPassSerializer(community_psycho_pass).data
     }, status=status.HTTP_202_ACCEPTED)
 
 
@@ -37,14 +37,14 @@ class UserPsychoPassView(APIView):
         psycho_pass = UserPsychoPass.objects.get(
             user_id=request.query_params.get("id"))
 
-        return Response(serialize_user(psycho_pass), status=status.HTTP_200_OK)
+        return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
         psycho_pass = UserPsychoPass.objects.create(
             platform=request.user, user_id=request.data.get("userID"))
         psycho_pass.save()
 
-        return Response(serialize_user(psycho_pass), status=status.HTTP_201_CREATED)
+        return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
         psycho_pass = UserPsychoPass.objects.get(
@@ -63,7 +63,7 @@ class CommunityPsychoPassView(APIView):
         community_psycho_pass = CommunityPsychoPass.objects.get(
             community=community)
 
-        return Response(serialize_community(community_psycho_pass), status=status.HTTP_200_OK)
+        return Response(CommunityPsychoPassSerializer(community_psycho_pass).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
         community = Community.objects.get(
@@ -75,17 +75,4 @@ class CommunityPsychoPassView(APIView):
         community_psycho_pass.users.remove(psycho_pass)
         community_psycho_pass.save()
 
-        return Response(serialize_community(community_psycho_pass), status=status.HTTP_202_ACCEPTED)
-
-
-def serialize_user(psycho_pass: UserPsychoPass) -> dict:
-    data = UserPsychoPassSerializer(psycho_pass).data
-    data["crime_coefficient"] = psycho_pass.crime_coefficient()
-    data["hue"] = psycho_pass.hue()
-    return data
-
-
-def serialize_community(community_psycho_pass: CommunityPsychoPass) -> dict:
-    data = CommunityPsychoPassSerializer(community_psycho_pass).data
-    data["area_stress_level"] = community_psycho_pass.area_stress_level()
-    return data
+        return Response(CommunityPsychoPassSerializer(community_psycho_pass).data, status=status.HTTP_202_ACCEPTED)

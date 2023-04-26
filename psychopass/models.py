@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from community.models import Community
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, SerializerMethodField, IntegerField, CharField, DictField
 
 # Create your models here
 
@@ -122,12 +122,17 @@ class CommunityPsychoPass(models.Model):
 
 
 class UserPsychoPassSerializer(ModelSerializer):
+    crime_coefficient = IntegerField()
+    hue = CharField()
+
     class Meta:
         model = UserPsychoPass
         fields = "__all__"
 
 
 class CommunityPsychoPassSerializer(ModelSerializer):
+    area_stress_level = DictField()
+
     class Meta:
         model = CommunityPsychoPass
         fields = "__all__"

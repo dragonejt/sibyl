@@ -19,10 +19,11 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework.permissions import AllowAny
+from community.views import CommunityView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('community', include("community.urls")),
+    path('community', CommunityView.as_view()),
     path('psychopass/', include("psychopass.urls")),
     path('dominator/', include("dominator.urls")),
     path('openapi-schema.yml', get_schema_view(

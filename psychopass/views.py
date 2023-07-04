@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -14,10 +15,10 @@ from psychopass.models import UserPsychoPass, UserPsychoPassSerializer, Communit
 def ingest_message(request: Request) -> Response:
     psycho_pass, _ = UserPsychoPass.objects.get_or_create(
         platform=request.user, user_id=request.data.get("userID"))
-    community = Community.objects.get(
-        platform=request.user, community_id=request.data.get("communityID"))
-    community_psycho_pass = CommunityPsychoPass.objects.get(
-        community=community)
+    community = get_object_or_404(
+        Community, platform=request.user, community_id=request.data.get("communityID"))
+    community_psycho_pass = get_object_or_404(
+        CommunityPsychoPass, community=community)
 
     psycho_pass.ingest_message(request.data.get("attributeScores"))
     psycho_pass.save()
@@ -34,8 +35,8 @@ class UserPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        psycho_pass = UserPsychoPass.objects.get(
-            user_id=request.query_params.get("id"))
+        psycho_pass = get_object_or_404(
+            UserPsychoPass, user_id=request.query_params.get("id"))
 
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK)
 
@@ -47,8 +48,8 @@ class UserPsychoPassView(APIView):
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
-        psycho_pass = UserPsychoPass.objects.get(
-            user_id=request.query_params.get("id"))
+        psycho_pass = get_object_or_404(
+            UserPsychoPass, user_id=request.query_params.get("id"))
         psycho_pass.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -58,20 +59,20 @@ class CommunityPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        community = Community.objects.get(
-            platform=request.user, community_id=request.query_params.get("id"))
-        community_psycho_pass = CommunityPsychoPass.objects.get(
-            community=community)
+        community = get_object_or_404(
+            Community, platform=request.user, community_id=request.query_params.get("id"))
+        community_psycho_pass = get_object_or_404(
+            CommunityPsychoPass, community=community)
 
         return Response(CommunityPsychoPassSerializer(community_psycho_pass).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community = Community.objects.get(
-            platform=request.user, community_id=request.data.get("communityID"))
-        community_psycho_pass = CommunityPsychoPass.objects.get(
-            community=community)
-        psycho_pass = UserPsychoPass.objects.get(
-            user_id=request.data.get("userID"))
+        community = get_object_or_404(
+            Community, platform=request.user, community_id=request.data.get("communityID"))
+        community_psycho_pass = get_object_or_404(
+            CommunityPsychoPass, community=community)
+        psycho_pass = get_object_or_404(
+            UserPsychoPass, user_id=request.data.get("userID"))
         community_psycho_pass.users.remove(psycho_pass)
         community_psycho_pass.save()
 

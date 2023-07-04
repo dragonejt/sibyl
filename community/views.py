@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser
@@ -14,8 +15,8 @@ class CommunityView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        community = Community.objects.get(
-            platform=request.user, community_id=request.query_params.get("id"))
+        community = get_object_or_404(
+            Community, platform=request.user, community_id=request.query_params.get("id"))
 
         return Response(CommunitySerializer(community).data, status=status.HTTP_200_OK)
 
@@ -35,8 +36,8 @@ class CommunityView(APIView):
         return Response(CommunitySerializer(community).data, status=status.HTTP_201_CREATED)
 
     def put(self, request: Request) -> Response:
-        community = Community.objects.get(
-            community_id=request.data.get("communityID"))
+        community = get_object_or_404(
+            Community, community_id=request.data.get("communityID"))
         community_data = request.data.copy()
         community_data["platform"] = community.platform.id
         community_data["community_id"] = request.data.get("communityID")
@@ -47,8 +48,8 @@ class CommunityView(APIView):
         return Response(CommunitySerializer(community).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
-        community = Community.objects.get(
-            platform=request.user, community_id=request.query_params.get("id"))
+        community = get_object_or_404(
+            Community, platform=request.user, community_id=request.query_params.get("id"))
         community.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)

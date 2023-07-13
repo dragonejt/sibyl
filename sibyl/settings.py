@@ -28,7 +28,7 @@ SECRET_KEY = get_random_secret_key()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("ENV") != "production"
 
-ALLOWED_HOSTS = [os.getenv("DEPLOY_HOST")]
+ALLOWED_HOSTS = [os.getenv("DEPLOY_HOST"), "localhost"]
 
 
 # Application definition
@@ -143,3 +143,10 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer'
     ]
 }
+
+CSRF_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SECURE = not DEBUG
+SECURE_SSL_REDIRECT = not DEBUG
+SECURE_HSTS_SECONDS = 3600 if DEBUG is False else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
+SECURE_HSTS_PRELOAD = not DEBUG

@@ -1,2 +1,2 @@
 web: gunicorn --worker-tmp-dir /dev/shm sibyl.wsgi
-release: python manage.py makemigrations && python manage.py migrate
+release: python manage.py makemigrations && python manage.py migrate && python manage.py check --deploy

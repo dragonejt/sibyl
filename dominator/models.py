@@ -1,14 +1,13 @@
 from django.db import models
 from rest_framework.serializers import ModelSerializer
 from community.models import Community
-from psychopass.models import CommunityPsychoPass
 
 # Create your models here
 
 
 class Actions(models.IntegerChoices):
-    NOOP = 0
-    NOTIFY = 1
+    NOTIFY = 0
+    REMOVE = 1
     MUTE = 2
     KICK = 3
     BAN = 4

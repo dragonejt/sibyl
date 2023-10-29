@@ -1,7 +1,8 @@
+from types import NoneType
 from django.db import models
 from django.contrib.auth import get_user_model
 from community.models import Community
-from rest_framework.serializers import ModelSerializer, SerializerMethodField, IntegerField, CharField, DictField
+from rest_framework.serializers import ModelSerializer, IntegerField, CharField, DictField
 
 # Create your models here
 
@@ -30,19 +31,19 @@ class UserPsychoPass(models.Model):
 
     def ingest_message(self, scores: dict) -> None:
         self.toxicity = self.update_score(
-            scores.get("TOXICITY"), self.toxicity, self.messages)
+            scores["TOXICITY"], self.toxicity, self.messages)
         self.severe_toxicity = self.update_score(
-            scores.get("SEVERE_TOXICITY"), self.severe_toxicity, self.messages)
+            scores["SEVERE_TOXICITY"], self.severe_toxicity, self.messages)
         self.identity_attack = self.update_score(
-            scores.get("IDENTITY_ATTACK"), self.identity_attack, self.messages)
+            scores["IDENTITY_ATTACK"], self.identity_attack, self.messages)
         self.insult = self.update_score(
-            scores.get("INSULT"), self.insult, self.messages)
+            scores["INSULT"], self.insult, self.messages)
         self.threat = self.update_score(
-            scores.get("THREAT"), self.threat, self.messages)
+            scores["THREAT"], self.threat, self.messages)
         self.profanity = self.update_score(
-            scores.get("PROFANITY"), self.profanity, self.messages)
+            scores["PROFANITY"], self.profanity, self.messages)
         self.sexually_explicit = self.update_score(
-            scores.get("SEXUALLY_EXPLICIT"), self.sexually_explicit, self.messages)
+            scores["SEXUALLY_EXPLICIT"], self.sexually_explicit, self.messages)
         self.messages = max(0, min(500, self.messages+1))
 
     def crime_coefficient(self) -> int:
@@ -67,7 +68,7 @@ class UserPsychoPass(models.Model):
         )
 
     def update_score(self, attr: dict, field: float, denom: int) -> float:
-        attribute_score = attr.get("summaryScore").get("value")
+        attribute_score = attr["summaryScore"]["value"]
         score = (attribute_score + field * denom)/(denom + 1)
         return max(0, min(1, score))
 
@@ -99,25 +100,25 @@ class CommunityPsychoPass(models.Model):
             "sexually_explicit": self.sexually_explicit()
         }
 
-    def toxicity(self) -> float:
+    def toxicity(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("toxicity")).get("toxicity__avg")
 
-    def severe_toxicity(self) -> float:
+    def severe_toxicity(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("severe_toxicity")).get("severe_toxicity__avg")
 
-    def identity_attack(self) -> float:
+    def identity_attack(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("identity_attack")).get("identity_attack__avg")
 
-    def insult(self) -> float:
+    def insult(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("insult")).get("insult__avg")
 
-    def threat(self) -> float:
+    def threat(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("threat")).get("threat__avg")
 
-    def profanity(self) -> float:
+    def profanity(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("profanity")).get("profanity__avg")
 
-    def sexually_explicit(self) -> float:
+    def sexually_explicit(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("sexually_explicit")).get("sexually_explicit__avg")
 
 

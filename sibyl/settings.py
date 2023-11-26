@@ -82,10 +82,6 @@ WSGI_APPLICATION = 'sibyl.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-print(os.environ)
-print("DATABASE_URL" in os.environ)
-print(os.getenv("DATABASE_URL"))
-
 DATABASES = {
     'default': dj_database_url.parse(os.getenv("DATABASE_URL")) if "DATABASE_URL" in os.environ else {
         "ENGINE": 'django.db.backends.sqlite3',

@@ -9,8 +9,7 @@ on:
       - "main"
 
 env:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  ENV: test
+  ENV: testing
 
 jobs:
   test:

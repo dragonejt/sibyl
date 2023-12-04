@@ -7,16 +7,16 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 dj-database-url = "*"
-psycopg = "*"
 coverage = "*"
 whitenoise = "*"
 pyyaml = "*"
 gunicorn = "*"
 uritemplate = "*"
+psycopg = "*"
 
 [dev-packages]
 pylint = "*"
 autopep8 = "*"
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"

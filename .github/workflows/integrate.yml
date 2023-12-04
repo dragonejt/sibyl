@@ -37,9 +37,7 @@ jobs:
         pipenv run coverage xml
     
     - name: Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
+      uses: codecov/codecov-action@v3
       
   analyze:
     runs-on: ubuntu-latest

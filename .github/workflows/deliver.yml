@@ -20,3 +20,4 @@ jobs:
           git_remote_url: ${{ secrets.GIT_REMOTE_URL }}
           ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
           branch: 'main'
+          git_push_flags: --force

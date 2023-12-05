@@ -10,7 +10,6 @@ on:
 
 env:
   ENV: testing
-  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   test:
@@ -38,6 +37,8 @@ jobs:
     
     - name: Codecov
       uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
       
   analyze:
     runs-on: ubuntu-latest

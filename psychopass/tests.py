@@ -13,7 +13,7 @@ class TestUserPsychoPassView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/user"
-        self.user = User.objects.create_superuser(username="discord")
+        self.user = User.objects.create_superuser(username=get_random_string(10), email=None, password=None)
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.psycho_pass = UserPsychoPass.objects.create(
@@ -53,7 +53,7 @@ class TestCommunityPsychoPassView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/community"
-        self.user = User.objects.create_superuser(username="discord")
+        self.user = User.objects.create_superuser(username=get_random_string(10), email=None, password=None)
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.community = Community.objects.create(
@@ -93,7 +93,7 @@ class TestIngestMessage(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/message"
-        self.user = User.objects.create_superuser(username="discord")
+        self.user = User.objects.create_superuser(username=get_random_string(10), email=None, password=None)
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.community = Community.objects.create(

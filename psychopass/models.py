@@ -11,16 +11,16 @@ class UserPsychoPass(models.Model):
     platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     user_id = models.CharField(max_length=20, unique=True)
 
-    messages = models.PositiveBigIntegerField(default=0)
-    psycho_hazard = models.BooleanField(default=False)
+    messages = models.PositiveIntegerField(db_default=0)
+    psycho_hazard = models.BooleanField(db_default=False)
 
-    toxicity = models.FloatField(default=0.5)
-    severe_toxicity = models.FloatField(default=0.5)
-    identity_attack = models.FloatField(default=0.5)
-    insult = models.FloatField(default=0.5)
-    threat = models.FloatField(default=0.5)
-    profanity = models.FloatField(default=0.5)
-    sexually_explicit = models.FloatField(default=0.5)
+    toxicity = models.FloatField(db_default=0.5)
+    severe_toxicity = models.FloatField(db_default=0.5)
+    identity_attack = models.FloatField(db_default=0.5)
+    insult = models.FloatField(db_default=0.5)
+    threat = models.FloatField(db_default=0.5)
+    profanity = models.FloatField(db_default=0.5)
+    sexually_explicit = models.FloatField(db_default=0.5)
 
     class Meta:
         verbose_name = "Psycho-Pass"
@@ -28,23 +28,6 @@ class UserPsychoPass(models.Model):
 
     def __str__(self) -> str:
         return f"{self.platform.username}/{self.user_id} ({self.id})"
-
-    def ingest_message(self, scores: dict) -> None:
-        self.toxicity = self.update_score(
-            scores["TOXICITY"], self.toxicity, self.messages)
-        self.severe_toxicity = self.update_score(
-            scores["SEVERE_TOXICITY"], self.severe_toxicity, self.messages)
-        self.identity_attack = self.update_score(
-            scores["IDENTITY_ATTACK"], self.identity_attack, self.messages)
-        self.insult = self.update_score(
-            scores["INSULT"], self.insult, self.messages)
-        self.threat = self.update_score(
-            scores["THREAT"], self.threat, self.messages)
-        self.profanity = self.update_score(
-            scores["PROFANITY"], self.profanity, self.messages)
-        self.sexually_explicit = self.update_score(
-            scores["SEXUALLY_EXPLICIT"], self.sexually_explicit, self.messages)
-        self.messages = max(0, min(500, self.messages+1))
 
     def crime_coefficient(self) -> int:
         base = 100

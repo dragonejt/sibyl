@@ -12,7 +12,7 @@ class TestCommunityView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/community"
-        self.user = User.objects.create_superuser(username="discord")
+        self.user = User.objects.create_superuser(username=get_random_string(10), email=None, password=None)
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         self.community = Community.objects.create(

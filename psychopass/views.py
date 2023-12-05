@@ -19,8 +19,24 @@ def ingest_message(request: Request) -> Response:
         Community, platform=request.user, community_id=request.data.get("communityID"))
     community_psycho_pass = get_object_or_404(
         CommunityPsychoPass, community=community)
-
-    psycho_pass.ingest_message(request.data.get("attributeScores"))
+    
+    attribute_scores = request.data["attributeScores"]
+    psycho_pass.toxicity = psycho_pass.update_score(
+        attribute_scores["TOXICITY"], psycho_pass.toxicity, psycho_pass.messages)
+    psycho_pass.severe_toxicity = psycho_pass.update_score(
+        attribute_scores["SEVERE_TOXICITY"], psycho_pass.severe_toxicity, psycho_pass.messages)
+    psycho_pass.identity_attack = psycho_pass.update_score(
+        attribute_scores["IDENTITY_ATTACK"], psycho_pass.identity_attack, psycho_pass.messages)
+    psycho_pass.insult = psycho_pass.update_score(
+        attribute_scores["INSULT"], psycho_pass.insult, psycho_pass.messages)
+    psycho_pass.threat = psycho_pass.update_score(
+        attribute_scores["THREAT"], psycho_pass.threat, psycho_pass.messages)
+    psycho_pass.profanity = psycho_pass.update_score(
+        attribute_scores["PROFANITY"], psycho_pass.profanity, psycho_pass.messages)
+    psycho_pass.sexually_explicit = psycho_pass.update_score(
+        attribute_scores["SEXUALLY_EXPLICIT"], psycho_pass.sexually_explicit, psycho_pass.messages)
+    psycho_pass.messages = max(0, min(500, psycho_pass.messages+1))
+    
     psycho_pass.save()
     community_psycho_pass.users.add(psycho_pass)
     community_psycho_pass.save()

@@ -1,14 +1,8 @@
 from django.contrib import admin
 from community.models import Community
 from dominator.models import MessageDominator, MemberDominator
-from psychopass.models import CommunityPsychoPass
 
 # Register your models here.
-
-
-class CommunityPsychoPassInline(admin.StackedInline):
-    model = CommunityPsychoPass
-    exclude = ["users"]
 
 
 class MessageDominatorInline(admin.StackedInline):
@@ -21,8 +15,7 @@ class MemberDominatorInline(admin.StackedInline):
 
 class CommunityAdmin(admin.ModelAdmin):
     model = Community
-    inlines = [CommunityPsychoPassInline,
-               MessageDominatorInline, MemberDominatorInline]
+    inlines = [MessageDominatorInline, MemberDominatorInline]
 
 
 admin.site.register(Community, CommunityAdmin)

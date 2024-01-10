@@ -8,6 +8,7 @@ from psychopass.models import CommunityPsychoPass
 
 class CommunityPsychoPassInline(admin.StackedInline):
     model = CommunityPsychoPass
+    exclude = ["users"]
 
 
 class MessageDominatorInline(admin.StackedInline):

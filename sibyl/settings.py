@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
+from git import Repo
 import dj_database_url
 import sentry_sdk
 
@@ -170,5 +171,6 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     profiles_sample_rate=1.0,
     enable_tracing=True,
-    environment=os.getenv("ENV")
+    environment=os.getenv("ENV"),
+    release=Repo(search_parent_directories=True).head.object.hexsha
 )

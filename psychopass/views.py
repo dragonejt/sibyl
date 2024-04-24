@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAdminUser
 from rest_framework import status
+from sentry_sdk import set_user
 from community.models import Community
 from psychopass.models import UserPsychoPass, UserPsychoPassSerializer, CommunityPsychoPass, CommunityPsychoPassSerializer
 # Create your views here.
@@ -13,6 +14,7 @@ from psychopass.models import UserPsychoPass, UserPsychoPassSerializer, Communit
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
+    set_user({"id": request.user.id, "username": f"{request.user.username}/{request.data.get("userID")}"})
     psycho_pass, _ = UserPsychoPass.objects.get_or_create(
         platform=request.user, user_id=request.data.get("userID"))
     community = get_object_or_404(
@@ -51,12 +53,14 @@ class UserPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
+        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.query_params.get("id")}"})
         psycho_pass = get_object_or_404(
             UserPsychoPass, user_id=request.query_params.get("id"))
 
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
+        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.data.get("userID")}"})
         psycho_pass = UserPsychoPass.objects.create(
             platform=request.user, user_id=request.data.get("userID"))
         psycho_pass.save()
@@ -64,6 +68,7 @@ class UserPsychoPassView(APIView):
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
+        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.query_params.get("id")}"})
         psycho_pass = get_object_or_404(
             UserPsychoPass, user_id=request.query_params.get("id"))
         psycho_pass.delete()

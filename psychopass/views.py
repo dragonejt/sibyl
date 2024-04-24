@@ -14,14 +14,17 @@ from psychopass.models import UserPsychoPass, UserPsychoPassSerializer, Communit
 @api_view(["POST"])
 @permission_classes([IsAdminUser])
 def ingest_message(request: Request) -> Response:
-    set_user({"id": request.user.id, "username": f"{request.user.username}/{request.data.get("userID")}"})
+    set_user({
+        "id": request.data.get("userID"),
+        "username": f"{request.user.username}/{request.data.get("userID")}"
+    })
     psycho_pass, _ = UserPsychoPass.objects.get_or_create(
         platform=request.user, user_id=request.data.get("userID"))
     community = get_object_or_404(
         Community, platform=request.user, community_id=request.data.get("communityID"))
     community_psycho_pass = get_object_or_404(
         CommunityPsychoPass, community=community)
-    
+
     attribute_scores = request.data["attributeScores"]
     psycho_pass.toxicity = psycho_pass.update_score(
         attribute_scores["TOXICITY"], psycho_pass.toxicity, psycho_pass.messages)
@@ -38,7 +41,7 @@ def ingest_message(request: Request) -> Response:
     psycho_pass.sexually_explicit = psycho_pass.update_score(
         attribute_scores["SEXUALLY_EXPLICIT"], psycho_pass.sexually_explicit, psycho_pass.messages)
     psycho_pass.messages = max(0, min(500, psycho_pass.messages+1))
-    
+
     psycho_pass.save()
     community_psycho_pass.users.add(psycho_pass)
     community_psycho_pass.save()
@@ -53,14 +56,20 @@ class UserPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request: Request) -> Response:
-        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.query_params.get("id")}"})
+        set_user({
+            "id": request.query_params.get("id"),
+            "username": f"{request.user.username}/{request.query_params.get("id")}"
+        })
         psycho_pass = get_object_or_404(
             UserPsychoPass, user_id=request.query_params.get("id"))
 
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
-        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.data.get("userID")}"})
+        set_user({
+            "id": request.data.get("userID"),
+            "username": f"{request.user.username}/{request.data.get("userID")}"
+        })
         psycho_pass = UserPsychoPass.objects.create(
             platform=request.user, user_id=request.data.get("userID"))
         psycho_pass.save()
@@ -68,7 +77,10 @@ class UserPsychoPassView(APIView):
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_201_CREATED)
 
     def delete(self, request: Request) -> Response:
-        set_user({"id": request.user.id, "username": f"{request.user.username}/{request.query_params.get("id")}"})
+        set_user({
+            "id": request.query_params.get("id"),
+            "username": f"{request.user.username}/{request.query_params.get("id")}"
+        })
         psycho_pass = get_object_or_404(
             UserPsychoPass, user_id=request.query_params.get("id"))
         psycho_pass.delete()

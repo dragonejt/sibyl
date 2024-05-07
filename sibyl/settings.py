@@ -168,7 +168,7 @@ sentry_sdk.init(
     # Set profiles_sample_rate to 1.0 to profile 100%
     # of sampled transactions.
     # We recommend adjusting this value in production.
-    profiles_sample_rate=1/30,
+    profiles_sample_rate=1,
     enable_tracing=True,
     environment=os.getenv("ENV")
 )

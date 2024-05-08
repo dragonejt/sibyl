@@ -7,23 +7,27 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('community', '0001_initial'),
-        ('psychopass', '0002_remove_userpsychopass_last_flag'),
+        ("community", "0001_initial"),
+        ("psychopass", "0002_remove_userpsychopass_last_flag"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='communitypsychopass',
-            name='community_id',
+            model_name="communitypsychopass",
+            name="community_id",
         ),
         migrations.RemoveField(
-            model_name='communitypsychopass',
-            name='platform',
+            model_name="communitypsychopass",
+            name="platform",
         ),
         migrations.AddField(
-            model_name='communitypsychopass',
-            name='community',
-            field=models.OneToOneField(default=1063590532711972945, on_delete=django.db.models.deletion.CASCADE, to='community.community'),
+            model_name="communitypsychopass",
+            name="community",
+            field=models.OneToOneField(
+                default=1063590532711972945,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="community.community",
+            ),
             preserve_default=False,
         ),
     ]

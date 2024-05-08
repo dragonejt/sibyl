@@ -29,6 +29,9 @@ jobs:
         python -m pip install pipenv
         pipenv install
 
+    - name: Check Formatting
+      run: pipenv run black --check .
+
     - name: Run Tests
       run: |
         pipenv run python manage.py collectstatic

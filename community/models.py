@@ -17,10 +17,8 @@ class Community(models.Model):
         return f"{self.platform.username}/{self.community_id} ({self.id})"
 
     # For Discord Servers Only
-    discord_log_channel = models.CharField(
-        max_length=20, blank=True, null=True)
-    discord_notify_target = models.CharField(
-        max_length=20, blank=True, null=True)
+    discord_log_channel = models.CharField(max_length=20, blank=True, null=True)
+    discord_notify_target = models.CharField(max_length=20, blank=True, null=True)
 
 
 class CommunitySerializer(ModelSerializer):

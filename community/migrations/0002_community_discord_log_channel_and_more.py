@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('community', '0001_initial'),
+        ("community", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='community',
-            name='discord_log_channel',
+            model_name="community",
+            name="discord_log_channel",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
         migrations.AddField(
-            model_name='community',
-            name='discord_notify_target',
+            model_name="community",
+            name="discord_notify_target",
             field=models.CharField(blank=True, max_length=20, null=True),
         ),
     ]

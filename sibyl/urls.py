@@ -22,17 +22,25 @@ from rest_framework.permissions import AllowAny
 from community.views import CommunityView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('community', CommunityView.as_view()),
-    path('psychopass/', include("psychopass.urls")),
-    path('dominator/', include("dominator.urls")),
-    path('sibyl-schema.yml', get_schema_view(
-        title="Sibyl System API",
-        description="AutoMod and Toxicity Profiles using ML",
-        permission_classes=[AllowAny]
-    ), name='sibyl-schema'),
-    path('', TemplateView.as_view(
-        template_name='swagger-ui.html',
-        extra_context={'schema_url': 'sibyl-schema'}
-    ), name='swagger-ui'),
+    path("admin/", admin.site.urls),
+    path("community", CommunityView.as_view()),
+    path("psychopass/", include("psychopass.urls")),
+    path("dominator/", include("dominator.urls")),
+    path(
+        "sibyl-schema.yml",
+        get_schema_view(
+            title="Sibyl System API",
+            description="AutoMod and Toxicity Profiles using ML",
+            permission_classes=[AllowAny],
+        ),
+        name="sibyl-schema",
+    ),
+    path(
+        "",
+        TemplateView.as_view(
+            template_name="swagger-ui.html",
+            extra_context={"schema_url": "sibyl-schema"},
+        ),
+        name="swagger-ui",
+    ),
 ]

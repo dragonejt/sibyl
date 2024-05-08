@@ -6,24 +6,24 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dominator', '0002_remove_memberdominator_psycho_pass_and_more'),
+        ("dominator", "0002_remove_memberdominator_psycho_pass_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='memberdominator',
-            name='discord_log_channel',
+            model_name="memberdominator",
+            name="discord_log_channel",
         ),
         migrations.RemoveField(
-            model_name='memberdominator',
-            name='discord_notify_target',
+            model_name="memberdominator",
+            name="discord_notify_target",
         ),
         migrations.RemoveField(
-            model_name='messagedominator',
-            name='discord_log_channel',
+            model_name="messagedominator",
+            name="discord_log_channel",
         ),
         migrations.RemoveField(
-            model_name='messagedominator',
-            name='discord_notify_target',
+            model_name="messagedominator",
+            name="discord_notify_target",
         ),
     ]

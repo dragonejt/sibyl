@@ -2,7 +2,12 @@ from types import NoneType
 from django.db import models
 from django.contrib.auth import get_user_model
 from community.models import Community
-from rest_framework.serializers import ModelSerializer, IntegerField, CharField, DictField
+from rest_framework.serializers import (
+    ModelSerializer,
+    IntegerField,
+    CharField,
+    DictField,
+)
 
 # Create your models here
 
@@ -47,12 +52,12 @@ class UserPsychoPass(models.Model):
             self.get_hex(self.insult),
             self.get_hex(self.identity_attack),
             self.get_hex(self.toxicity),
-            self.get_hex(self.severe_toxicity)
+            self.get_hex(self.severe_toxicity),
         )
 
     def update_score(self, attr: dict, field: float, denom: int) -> float:
         attribute_score = attr["summaryScore"]["value"]
-        score = (attribute_score + field * denom)/(denom + 1)
+        score = (attribute_score + field * denom) / (denom + 1)
         return max(0, min(1, score))
 
     def get_hex(self, score: float) -> str:
@@ -80,17 +85,21 @@ class CommunityPsychoPass(models.Model):
             "insult": self.insult(),
             "threat": self.threat(),
             "profanity": self.profanity(),
-            "sexually_explicit": self.sexually_explicit()
+            "sexually_explicit": self.sexually_explicit(),
         }
 
     def toxicity(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("toxicity")).get("toxicity__avg")
 
     def severe_toxicity(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("severe_toxicity")).get("severe_toxicity__avg")
+        return self.users.aggregate(models.Avg("severe_toxicity")).get(
+            "severe_toxicity__avg"
+        )
 
     def identity_attack(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("identity_attack")).get("identity_attack__avg")
+        return self.users.aggregate(models.Avg("identity_attack")).get(
+            "identity_attack__avg"
+        )
 
     def insult(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("insult")).get("insult__avg")
@@ -102,7 +111,9 @@ class CommunityPsychoPass(models.Model):
         return self.users.aggregate(models.Avg("profanity")).get("profanity__avg")
 
     def sexually_explicit(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("sexually_explicit")).get("sexually_explicit__avg")
+        return self.users.aggregate(models.Avg("sexually_explicit")).get(
+            "sexually_explicit__avg"
+        )
 
 
 class UserPsychoPassSerializer(ModelSerializer):

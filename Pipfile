@@ -7,7 +7,6 @@ name = "pypi"
 django = "*"
 djangorestframework = "*"
 dj-database-url = "*"
-coverage = "*"
 whitenoise = "*"
 pyyaml = "*"
 gunicorn = "*"
@@ -17,7 +16,8 @@ sentry-sdk = {extras = ["django"], version = "*"}
 
 [dev-packages]
 pylint = "*"
-autopep8 = "*"
+black = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.12"

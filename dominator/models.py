@@ -24,31 +24,34 @@ class MessageDominator(models.Model):
         return f"{self.community.platform.username}/{self.community.community_id} ({self.id})"
 
     toxicity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     toxicity_threshold = models.FloatField(default=0.5)
 
     severe_toxicity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     severe_toxicity_threshold = models.FloatField(default=0.5)
 
     identity_attack_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     identity_attack_threshold = models.FloatField(default=0.5)
 
-    insult_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+    insult_action = models.IntegerField(choices=Actions.choices, default=Actions.NOTIFY)
     insult_threshold = models.FloatField(default=0.5)
 
-    threat_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+    threat_action = models.IntegerField(choices=Actions.choices, default=Actions.NOTIFY)
     threat_threshold = models.FloatField(default=0.5)
 
     profanity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     profanity_threshold = models.FloatField(default=0.5)
 
     sexually_explicit_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     sexually_explicit_threshold = models.FloatField(default=0.5)
 
 
@@ -63,36 +66,41 @@ class MemberDominator(models.Model):
         return f"{self.community.platform.username}/{self.community.community_id} ({self.id})"
 
     crime_coefficient_100_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     crime_coefficient_300_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.BAN)
+        choices=Actions.choices, default=Actions.BAN
+    )
 
     toxicity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     toxicity_threshold = models.FloatField(default=0.5)
 
     severe_toxicity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     severe_toxicity_threshold = models.FloatField(default=0.5)
 
     identity_attack_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     identity_attack_threshold = models.FloatField(default=0.5)
 
-    insult_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+    insult_action = models.IntegerField(choices=Actions.choices, default=Actions.NOTIFY)
     insult_threshold = models.FloatField(default=0.5)
 
-    threat_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+    threat_action = models.IntegerField(choices=Actions.choices, default=Actions.NOTIFY)
     threat_threshold = models.FloatField(default=0.5)
 
     profanity_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     profanity_threshold = models.FloatField(default=0.5)
 
     sexually_explicit_action = models.IntegerField(
-        choices=Actions.choices, default=Actions.NOTIFY)
+        choices=Actions.choices, default=Actions.NOTIFY
+    )
     sexually_explicit_threshold = models.FloatField(default=0.5)
 
 

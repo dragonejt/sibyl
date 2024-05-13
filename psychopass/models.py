@@ -15,9 +15,7 @@ from rest_framework.serializers import (
 class UserPsychoPass(models.Model):
     platform = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     user_id = models.CharField(max_length=20, unique=True)
-
     messages = models.PositiveIntegerField(db_default=0)
-    psycho_hazard = models.BooleanField(db_default=False)
 
     toxicity = models.FloatField(db_default=0.5)
     severe_toxicity = models.FloatField(db_default=0.5)

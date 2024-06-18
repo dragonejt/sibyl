@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
-import os
+from os import getenv
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 import dj_database_url
@@ -27,9 +27,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = get_random_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("ENV") != "production"
+DEBUG = getenv("ENV") != "production"
 
-ALLOWED_HOSTS = [os.getenv("DEPLOY_HOST"), "localhost"]
+ALLOWED_HOSTS = [getenv("DEPLOY_HOST"), "localhost"]
 
 
 # Application definition
@@ -64,7 +64,7 @@ ROOT_URLCONF = "sibyl.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "sibyl/templates")],
+        "DIRS": [Path(BASE_DIR, "sibyl/templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -85,11 +85,11 @@ WSGI_APPLICATION = "sibyl.wsgi.application"
 
 DATABASES = {
     "default": (
-        dj_database_url.parse(os.getenv("DATABASE_URL"))
-        if os.getenv("DATABASE_URL") is not None
+        dj_database_url.parse(getenv("DATABASE_URL"))
+        if getenv("DATABASE_URL") is not None
         else {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+            "NAME": Path(BASE_DIR, "db.sqlite3"),
         }
     )
 }
@@ -130,7 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATIC_ROOT = Path(BASE_DIR, "staticfiles")
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
@@ -170,5 +170,5 @@ sentry_sdk.init(
     # We recommend adjusting this value in production.
     profiles_sample_rate=1,
     enable_tracing=True,
-    environment=os.getenv("ENV"),
+    environment=getenv("ENV"),
 )

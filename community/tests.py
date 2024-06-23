@@ -29,6 +29,11 @@ class TestCommunityView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), CommunitySerializer(self.community).data)
 
+    def test_head(self) -> None:
+        response = self.client.head(f"{self.url}?id={self.community.community_id}")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_post(self) -> None:
         community_id = get_random_string(20)
         response = self.client.post(

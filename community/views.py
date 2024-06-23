@@ -23,6 +23,14 @@ class CommunityView(APIView):
 
         return Response(CommunitySerializer(community).data, status=status.HTTP_200_OK)
 
+    def head(self, request: Request) -> Response:
+        community = get_object_or_404(
+            Community, community_id=request.query_params.get("id")
+        )
+        if request.user == community.platform:
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
+
     def post(self, request: Request) -> Response:
         community = Community.objects.create(
             platform=request.user, community_id=request.data.get("communityID")

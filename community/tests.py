@@ -1,6 +1,6 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from rest_framework.authtoken.models import Token
 from community.views import Community, CommunitySerializer
@@ -12,7 +12,7 @@ class TestCommunityView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/community"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)
@@ -29,10 +29,22 @@ class TestCommunityView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), CommunitySerializer(self.community).data)
 
-    def test_head(self) -> None:
+    def test_head_ok(self) -> None:
         response = self.client.head(f"{self.url}?id={self.community.community_id}")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_head_forbidden(self) -> None:
+        user = get_user_model().objects.create(
+            username=get_random_string(10),
+            email=get_random_string(10),
+            password=get_random_string(10),
+        )
+        community = Community.objects.create(
+            platform=user, community_id=get_random_string(20)
+        )
+        response = self.client.head(f"{self.url}?id={community.community_id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_post(self) -> None:
         community_id = get_random_string(20)

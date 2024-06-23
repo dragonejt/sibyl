@@ -35,13 +35,9 @@ class CommunityView(APIView):
         community = Community.objects.create(
             platform=request.user, community_id=request.data.get("communityID")
         )
-        community.save()
-        community_psycho_pass = CommunityPsychoPass.objects.create(community=community)
-        community_psycho_pass.save()
-        member_dominator = MemberDominator.objects.create(community=community)
-        member_dominator.save()
-        message_dominator = MessageDominator.objects.create(community=community)
-        message_dominator.save()
+        CommunityPsychoPass.objects.create(community=community)
+        MemberDominator.objects.create(community=community)
+        MessageDominator.objects.create(community=community)
 
         return Response(
             CommunitySerializer(community).data, status=status.HTTP_201_CREATED

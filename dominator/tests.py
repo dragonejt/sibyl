@@ -1,7 +1,7 @@
 import random
 from rest_framework.test import APITestCase
 from rest_framework import status
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from rest_framework.authtoken.models import Token
 from dominator.views import (
@@ -19,7 +19,7 @@ class TestMemberDominatorView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/dominator/member"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)
@@ -84,7 +84,7 @@ class TestMessageDominatorView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/dominator/message"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)

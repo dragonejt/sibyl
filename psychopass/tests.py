@@ -1,6 +1,6 @@
 from random import random
 from rest_framework.test import APITestCase
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
 from rest_framework import status
 from rest_framework.authtoken.models import Token
@@ -19,7 +19,7 @@ class TestUserPsychoPassView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/user"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)
@@ -62,7 +62,7 @@ class TestCommunityPsychoPassView(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/community"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)
@@ -111,7 +111,7 @@ class TestIngestMessage(APITestCase):
 
     def setUp(self) -> None:
         self.url = "/psychopass/message"
-        self.user = User.objects.create_superuser(
+        self.user = get_user_model().objects.create_superuser(
             username=get_random_string(10), email=None, password=None
         )
         self.token = Token.objects.create(user=self.user)

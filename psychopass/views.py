@@ -94,7 +94,7 @@ class UserPsychoPassView(APIView):
         return Response(
             UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK
         )
-    
+
     def head(self, request: Request) -> Response:
         set_user(
             {

@@ -37,6 +37,23 @@ class TestUserPsychoPassView(APITestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_head_ok(self) -> None:
+        response = self.client.head(f"{self.url}?id={self.psycho_pass.user_id}")
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_head_forbidden(self) -> None:
+        user = get_user_model().objects.create(
+            username=get_random_string(10),
+            email=get_random_string(10),
+            password=get_random_string(10),
+        )
+        psycho_pass = UserPsychoPass.objects.create(
+            platform=user, user_id=get_random_string(20)
+        )
+        response = self.client.head(f"{self.url}?id={psycho_pass.user_id}")
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
     def test_post(self) -> None:
         user_id = get_random_string(20)
         response = self.client.post(self.url, data={"userID": user_id}, format="json")

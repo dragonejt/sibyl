@@ -94,6 +94,20 @@ class UserPsychoPassView(APIView):
         return Response(
             UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK
         )
+    
+    def head(self, request: Request) -> Response:
+        set_user(
+            {
+                "id": request.query_params.get("id"),
+                "username": f"{request.user.username}/{request.query_params.get("id")}",
+            }
+        )
+        psycho_pass = get_object_or_404(
+            UserPsychoPass, user_id=request.query_params.get("id")
+        )
+        if request.user == psycho_pass.platform:
+            return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
     def post(self, request: Request) -> Response:
         set_user(

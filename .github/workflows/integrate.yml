@@ -29,6 +29,9 @@ jobs:
         python -m pip install pipenv
         pipenv install --dev
 
+    - name: Lint Project
+      run: pipenv run pylint --load-plugins pylint_django --django-settings-module=sibyl.settings sibyl community psychopass dominator
+
     - name: Check Formatting
       run: pipenv run black --check .
 

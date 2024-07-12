@@ -16,6 +16,7 @@ sentry-sdk = {extras = ["django"], version = "*"}
 
 [dev-packages]
 pylint = "*"
+pylint-django = "*"
 black = "*"
 coverage = "*"
 

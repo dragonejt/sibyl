@@ -1,7 +1,7 @@
-from rest_framework.test import APITestCase
-from rest_framework import status
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
+from rest_framework.test import APITestCase
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from community.views import Community, CommunitySerializer
 

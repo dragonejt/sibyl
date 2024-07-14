@@ -1,13 +1,13 @@
 from types import NoneType
 from django.db import models
 from django.contrib.auth import get_user_model
-from community.models import Community
 from rest_framework.serializers import (
     ModelSerializer,
     IntegerField,
     CharField,
     DictField,
 )
+from community.models import Community
 
 # Create your models here
 

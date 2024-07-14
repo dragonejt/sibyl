@@ -1,8 +1,8 @@
-import random
-from rest_framework.test import APITestCase
-from rest_framework import status
+from random import random, randint
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
+from rest_framework.test import APITestCase
+from rest_framework import status
 from rest_framework.authtoken.models import Token
 from dominator.views import (
     Community,
@@ -48,8 +48,8 @@ class TestMemberDominatorView(APITestCase):
             self.dominator.toxicity_threshold,
             MemberDominator._meta.get_field("toxicity_threshold").get_default(),
         )
-        toxicity_action = random.randint(0, 4)
-        toxicity_threshold = random.random()
+        toxicity_action = randint(0, 4)
+        toxicity_threshold = random()
 
         response = self.client.put(
             self.url,
@@ -113,8 +113,8 @@ class TestMessageDominatorView(APITestCase):
             self.dominator.toxicity_threshold,
             MessageDominator._meta.get_field("toxicity_threshold").get_default(),
         )
-        toxicity_action = random.randint(0, 4)
-        toxicity_threshold = random.random()
+        toxicity_action = randint(0, 4)
+        toxicity_threshold = random()
 
         response = self.client.put(
             self.url,

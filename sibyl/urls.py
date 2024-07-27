@@ -15,17 +15,22 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
 from rest_framework.permissions import AllowAny
 from community.views import CommunityView
+from psychopass.views import UserPsychoPassView, CommunityPsychoPassView, ingest_message
+from dominator.views import MessageDominatorView, MemberDominatorView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("community", CommunityView.as_view()),
-    path("psychopass/", include("psychopass.urls")),
-    path("dominator/", include("dominator.urls")),
+    path("psychopass/user", UserPsychoPassView.as_view()),
+    path("psychopass/community", CommunityPsychoPassView.as_view()),
+    path("psychopass/message", ingest_message),
+    path("dominator/message", MessageDominatorView.as_view()),
+    path("dominator/member", MemberDominatorView.as_view()),
     path(
         "sibyl-schema.yml",
         get_schema_view(

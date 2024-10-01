@@ -164,7 +164,7 @@ sentry_init(
     dsn="https://5db3e0ba1c5afa81a69054606357b5c1@o4507124907638784.ingest.us.sentry.io/4507124912357376",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
-    traces_sample_rate=1,
+    traces_sample_rate=1 / 5,
     # Set profiles_sample_rate to 1.0 to profile 100%
     # of sampled transactions.
     # We recommend adjusting this value in production.

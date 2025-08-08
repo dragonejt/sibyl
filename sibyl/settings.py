@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 
 from os import getenv
 from pathlib import Path
-from django.core.management.utils import get_random_secret_key
+
 from dj_database_url import parse as parse_db_url
+from django.core.management.utils import get_random_secret_key
 from sentry_sdk import init as sentry_init
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -145,9 +146,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Django Rest Framework
 
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication"
-    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
 }

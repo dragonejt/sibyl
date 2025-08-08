@@ -1,15 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
-from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
+
 from community.views import Community, CommunitySerializer
 
 # Create your tests here.
 
 
 class TestCommunityView(APITestCase):
-
     def setUp(self) -> None:
         self.url = "/community"
         self.user = get_user_model().objects.create_superuser(
@@ -22,9 +22,7 @@ class TestCommunityView(APITestCase):
         )
 
     def test_get(self) -> None:
-        response = self.client.get(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.get(f"{self.url}?id={self.community.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), CommunitySerializer(self.community).data)
@@ -40,17 +38,13 @@ class TestCommunityView(APITestCase):
             email=get_random_string(10),
             password=get_random_string(10),
         )
-        community = Community.objects.create(
-            platform=user, community_id=get_random_string(20)
-        )
+        community = Community.objects.create(platform=user, community_id=get_random_string(20))
         response = self.client.head(f"{self.url}?id={community.community_id}")
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_post(self) -> None:
         community_id = get_random_string(20)
-        response = self.client.post(
-            self.url, data={"communityID": community_id}, format="json"
-        )
+        response = self.client.post(self.url, data={"communityID": community_id}, format="json")
         community = Community.objects.get(platform=self.user, community_id=community_id)
 
         self.assertEqual(response.json().get("platform"), self.user.id)
@@ -89,9 +83,7 @@ class TestCommunityView(APITestCase):
 
     def test_delete(self) -> None:
         community_id = self.community.community_id
-        response = self.client.delete(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.delete(f"{self.url}?id={self.community.community_id}", format="json")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(Community.DoesNotExist):
             Community.objects.get(platform=self.user, community_id=community_id)

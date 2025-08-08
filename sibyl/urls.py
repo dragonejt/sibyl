@@ -16,12 +16,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from django.views.generic import TemplateView
-from rest_framework.schemas import get_schema_view
-from rest_framework.permissions import AllowAny
+from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
+
 from community.views import CommunityView
-from psychopass.views import UserPsychoPassView, CommunityPsychoPassView, ingest_message
-from dominator.views import MessageDominatorView, MemberDominatorView
+from dominator.views import MemberDominatorView, MessageDominatorView
+from psychopass.views import CommunityPsychoPassView, UserPsychoPassView, ingest_message
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -31,21 +30,6 @@ urlpatterns = [
     path("psychopass/message", ingest_message),
     path("dominator/message", MessageDominatorView.as_view()),
     path("dominator/member", MemberDominatorView.as_view()),
-    path(
-        "sibyl-schema.yml",
-        get_schema_view(
-            title="Sibyl System API",
-            description="AutoMod and Toxicity Profiles using ML",
-            permission_classes=[AllowAny],
-        ),
-        name="sibyl-schema",
-    ),
-    path(
-        "",
-        TemplateView.as_view(
-            template_name="swagger-ui.html",
-            extra_context={"schema_url": "sibyl-schema"},
-        ),
-        name="swagger-ui",
-    ),
+    path("schema", SpectacularAPIView.as_view(), name="schema"),
+    path("", SpectacularRedocView.as_view(url_name="schema")),
 ]

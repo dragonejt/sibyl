@@ -1,12 +1,14 @@
 from types import NoneType
-from django.db import models
+
 from django.contrib.auth import get_user_model
+from django.db import models
 from rest_framework.serializers import (
-    ModelSerializer,
-    IntegerField,
     CharField,
     DictField,
+    IntegerField,
+    ModelSerializer,
 )
+
 from community.models import Community
 
 # Create your models here
@@ -90,14 +92,10 @@ class CommunityPsychoPass(models.Model):
         return self.users.aggregate(models.Avg("toxicity")).get("toxicity__avg")
 
     def severe_toxicity(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("severe_toxicity")).get(
-            "severe_toxicity__avg"
-        )
+        return self.users.aggregate(models.Avg("severe_toxicity")).get("severe_toxicity__avg")
 
     def identity_attack(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("identity_attack")).get(
-            "identity_attack__avg"
-        )
+        return self.users.aggregate(models.Avg("identity_attack")).get("identity_attack__avg")
 
     def insult(self) -> float | NoneType:
         return self.users.aggregate(models.Avg("insult")).get("insult__avg")
@@ -109,9 +107,7 @@ class CommunityPsychoPass(models.Model):
         return self.users.aggregate(models.Avg("profanity")).get("profanity__avg")
 
     def sexually_explicit(self) -> float | NoneType:
-        return self.users.aggregate(models.Avg("sexually_explicit")).get(
-            "sexually_explicit__avg"
-        )
+        return self.users.aggregate(models.Avg("sexually_explicit")).get("sexually_explicit__avg")
 
 
 class UserPsychoPassSerializer(ModelSerializer):

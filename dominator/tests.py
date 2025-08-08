@@ -1,9 +1,11 @@
-from random import random, randint
+from random import randint, random
+
 from django.contrib.auth import get_user_model
 from django.utils.crypto import get_random_string
-from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.test import APITestCase
+
 from dominator.views import (
     Community,
     MemberDominator,
@@ -16,7 +18,6 @@ from dominator.views import (
 
 
 class TestMemberDominatorView(APITestCase):
-
     def setUp(self) -> None:
         self.url = "/dominator/member"
         self.user = get_user_model().objects.create_superuser(
@@ -30,14 +31,10 @@ class TestMemberDominatorView(APITestCase):
         self.dominator = MemberDominator.objects.create(community=self.community)
 
     def test_get(self) -> None:
-        response = self.client.get(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.get(f"{self.url}?id={self.community.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.json(), MemberDominatorSerializer(self.dominator).data
-        )
+        self.assertEqual(response.json(), MemberDominatorSerializer(self.dominator).data)
 
     def test_put(self) -> None:
         self.assertEqual(
@@ -71,9 +68,7 @@ class TestMemberDominatorView(APITestCase):
         community_id = self.community.community_id
         self.assertEqual(self.community.community_id, community_id)
 
-        response = self.client.delete(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.delete(f"{self.url}?id={self.community.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(MemberDominator.DoesNotExist):
@@ -81,7 +76,6 @@ class TestMemberDominatorView(APITestCase):
 
 
 class TestMessageDominatorView(APITestCase):
-
     def setUp(self) -> None:
         self.url = "/dominator/message"
         self.user = get_user_model().objects.create_superuser(
@@ -95,14 +89,10 @@ class TestMessageDominatorView(APITestCase):
         self.dominator = MessageDominator.objects.create(community=self.community)
 
     def test_get(self) -> None:
-        response = self.client.get(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.get(f"{self.url}?id={self.community.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(
-            response.json(), MessageDominatorSerializer(self.dominator).data
-        )
+        self.assertEqual(response.json(), MessageDominatorSerializer(self.dominator).data)
 
     def test_put(self) -> None:
         self.assertEqual(
@@ -136,9 +126,7 @@ class TestMessageDominatorView(APITestCase):
         community_id = self.community.community_id
         self.assertEqual(self.community.community_id, community_id)
 
-        response = self.client.delete(
-            f"{self.url}?id={self.community.community_id}", format="json"
-        )
+        response = self.client.delete(f"{self.url}?id={self.community.community_id}", format="json")
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         with self.assertRaises(MessageDominator.DoesNotExist):

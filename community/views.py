@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework.permissions import IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from community.models import Community, CommunitySerializer
+from dominator.models import MemberDominator, MessageDominator
 from psychopass.models import CommunityPsychoPass
-from dominator.models import MessageDominator, MemberDominator
 
 # Create your views here.
 
@@ -24,9 +25,7 @@ class CommunityView(APIView):
         return Response(CommunitySerializer(community).data, status=status.HTTP_200_OK)
 
     def head(self, request: Request) -> Response:
-        community = get_object_or_404(
-            Community, community_id=request.query_params.get("id")
-        )
+        community = get_object_or_404(Community, community_id=request.query_params.get("id"))
         if request.user == community.platform:
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_403_FORBIDDEN)
@@ -39,14 +38,10 @@ class CommunityView(APIView):
         MemberDominator.objects.create(community=community)
         MessageDominator.objects.create(community=community)
 
-        return Response(
-            CommunitySerializer(community).data, status=status.HTTP_201_CREATED
-        )
+        return Response(CommunitySerializer(community).data, status=status.HTTP_201_CREATED)
 
     def put(self, request: Request) -> Response:
-        community = get_object_or_404(
-            Community, community_id=request.data.get("communityID")
-        )
+        community = get_object_or_404(Community, community_id=request.data.get("communityID"))
         community_data = request.data.copy()
         community_data["platform"] = community.platform.id
         community_data["community_id"] = request.data.get("communityID")
@@ -54,9 +49,7 @@ class CommunityView(APIView):
         serializer.is_valid(raise_exception=True)
         community = serializer.save()
 
-        return Response(
-            CommunitySerializer(community).data, status=status.HTTP_202_ACCEPTED
-        )
+        return Response(CommunitySerializer(community).data, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request: Request) -> Response:
         community = get_object_or_404(

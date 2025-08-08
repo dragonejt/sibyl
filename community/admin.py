@@ -1,6 +1,7 @@
 from django.contrib import admin
+
 from community.models import Community
-from dominator.models import MessageDominator, MemberDominator
+from dominator.models import MemberDominator, MessageDominator
 
 # Register your models here.
 

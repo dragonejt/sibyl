@@ -26,10 +26,10 @@ class MemberDominatorView(APIView):
         return Response(MemberDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community = get_object_or_404(Community, community_id=request.data.get("communityID"))
+        community = get_object_or_404(Community, community_id=request.data.get("community_id"))
         dominator = get_object_or_404(MemberDominator, community=community)
         trigger_data = request.data.copy()
-        trigger_data.pop("communityID")
+        trigger_data.pop("community_id")
         trigger_data["community"] = community.id
         serializer = MemberDominatorSerializer(dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)
@@ -55,10 +55,10 @@ class MessageDominatorView(APIView):
         return Response(MessageDominatorSerializer(dominator).data, status=status.HTTP_200_OK)
 
     def put(self, request: Request) -> Response:
-        community = get_object_or_404(Community, community_id=request.data.get("communityID"))
+        community = get_object_or_404(Community, community_id=request.data.get("community_id"))
         dominator = get_object_or_404(MessageDominator, community=community)
         trigger_data = request.data.copy()
-        trigger_data.pop("communityID")
+        trigger_data.pop("community_id")
         trigger_data["community"] = community.id
         serializer = MessageDominatorSerializer(dominator, data=trigger_data)
         serializer.is_valid(raise_exception=True)

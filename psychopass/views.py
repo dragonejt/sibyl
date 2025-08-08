@@ -31,7 +31,7 @@ def ingest_message(request: Request) -> Response:
         platform=request.user, user_id=request.data.get("userID")
     )
     community = get_object_or_404(
-        Community, platform=request.user, community_id=request.data.get("communityID")
+        Community, platform=request.user, community_id=request.data.get("community_id")
     )
     community_psycho_pass = get_object_or_404(CommunityPsychoPass, community=community)
 
@@ -151,7 +151,7 @@ class CommunityPsychoPassView(APIView):
         community = get_object_or_404(
             Community,
             platform=request.user,
-            community_id=request.data.get("communityID"),
+            community_id=request.data.get("community_id"),
         )
         community_psycho_pass = get_object_or_404(CommunityPsychoPass, community=community)
         psycho_pass = get_object_or_404(UserPsychoPass, user_id=request.data.get("userID"))

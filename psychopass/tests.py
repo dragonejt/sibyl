@@ -98,7 +98,7 @@ class TestCommunityPsychoPassView(APITestCase):
         response = self.client.put(
             self.url,
             data={
-                "communityID": self.community.community_id,
+                "community_id": self.community.community_id,
                 "userID": self.user_psycho_pass.user_id,
             },
             format="json",
@@ -140,7 +140,7 @@ class TestIngestMessage(APITestCase):
                 },
                 "languages": ["en"],
                 "userID": get_random_string(20),
-                "communityID": self.community.community_id,
+                "community_id": self.community.community_id,
             },
             format="json",
         )

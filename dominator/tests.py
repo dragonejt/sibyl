@@ -51,7 +51,7 @@ class TestMemberDominatorView(APITestCase):
         response = self.client.put(
             self.url,
             data={
-                "communityID": self.community.community_id,
+                "community_id": self.community.community_id,
                 "toxicity_action": toxicity_action,
                 "toxicity_threshold": toxicity_threshold,
             },
@@ -109,7 +109,7 @@ class TestMessageDominatorView(APITestCase):
         response = self.client.put(
             self.url,
             data={
-                "communityID": self.community.community_id,
+                "community_id": self.community.community_id,
                 "toxicity_action": toxicity_action,
                 "toxicity_threshold": toxicity_threshold,
             },

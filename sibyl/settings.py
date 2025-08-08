@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
+import inspect
+import logging
 from os import getenv
 from pathlib import Path
 
 from dj_database_url import parse as parse_db_url
 from django.core.management.utils import get_random_secret_key
+from loguru import logger
 from sentry_sdk import init as sentry_init
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "drf_spectacular",
     "community",
     "psychopass",
     "dominator",
@@ -114,6 +118,54 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging
+# https://docs.djangoproject.com/en/dev/ref/logging/
+
+
+class LoguruHandler(logging.Handler):
+    def emit(self, record: logging.LogRecord) -> None:
+        # Get corresponding Loguru level if it exists.
+        level: str | int
+        try:
+            level = logger.level(record.levelname).name
+        except ValueError:
+            level = record.levelno
+
+        # Find caller from where originated the logged message.
+        frame, depth = inspect.currentframe(), 0
+        while frame and (depth == 0 or frame.f_code.co_filename == logging.__file__):
+            frame = frame.f_back
+            depth += 1
+
+        logger.opt(depth=depth, exception=record.exc_info).log(level, record.getMessage())
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "level": logging.INFO,
+            "class": LoguruHandler,
+        },
+        "django.server": {
+            "level": logging.INFO,
+            "class": LoguruHandler,
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": logging.INFO,
+        },
+        "django.server": {
+            "handlers": ["django.server"],
+            "level": logging.INFO,
+            "propagate": False,
+        },
+    },
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/dev/topics/i18n/
@@ -138,36 +190,59 @@ STORAGES = {
     },
 }
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Django Rest Framework
+
+# Django REST framework
+# https://www.django-rest-framework.org/api-guide/settings/
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.TokenAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
-    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
+
+
+# Production settings
+# https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 CSRF_COOKIE_SECURE = not DEBUG
 SESSION_COOKIE_SECURE = not DEBUG
 SECURE_SSL_REDIRECT = not DEBUG
-SECURE_HSTS_SECONDS = 3600 if DEBUG is False else 0
+SECURE_HSTS_SECONDS = 300 if DEBUG is False else 0
 SECURE_HSTS_INCLUDE_SUBDOMAINS = not DEBUG
 SECURE_HSTS_PRELOAD = not DEBUG
 
+
 # Sentry
-sentry_init(
-    dsn="https://5db3e0ba1c5afa81a69054606357b5c1@o4507124907638784.ingest.us.sentry.io/4507124912357376",
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    traces_sample_rate=1 / 10,
-    # Set profiles_sample_rate to 1.0 to profile 100%
-    # of sampled transactions.
-    # We recommend adjusting this value in production.
-    profiles_sample_rate=1,
-    enable_tracing=True,
-    environment=getenv("ENV"),
-)
+# https://docs.sentry.io/platforms/python/integrations/django/
+if DEBUG is False:
+    sentry_init(
+        dsn="https://67b36f9ddcd9ed33632c7f64076b76d7@o4507124907638784.ingest.us.sentry.io/4509806448607232",
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        traces_sample_rate=1 / 10,
+        # Set profiles_sample_rate to 1.0 to profile 100%
+        # of sampled transactions.
+        # We recommend adjusting this value in production.
+        profiles_sample_rate=1,
+        enable_tracing=True,
+        send_default_pii=True,
+        environment=getenv("ENV"),
+    )
+
+
+# Documentation
+# https://drf-spectacular.readthedocs.io/en/latest/settings.html
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "sibyl",
+    "DESCRIPTION": "AutoMod and Toxicity Profiles using ML",
+    "VERSION": "0.1.0",
+    "SERVE_PUBLIC": True,
+    "SERVE_INCLUDE_SCHEMA": False,
+}

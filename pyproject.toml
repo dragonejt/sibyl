@@ -25,14 +25,19 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://hakase.dragonejt.dev"
-source = "https://github.com/dragonejt/hakase.git"
-issues = "https://github.com/dragonejt/hakase/issues"
-documentation = "https://github.com/dragonejt/hakase/wiki"
+homepage = "https://sibyl.dragonejt.dev"
+source = "https://github.com/dragonejt/sibyl.git"
+issues = "https://github.com/dragonejt/sibyl/issues"
+documentation = "https://github.com/dragonejt/sibyl/wiki"
 
 [dependency-groups]
 dev = [
     "coverage",
+    "foundry-platform-sdk",
+    "ipykernel",
+    "polars",
+    "pyarrow",
+    "pyiceberg",
     "ruff",
 ]
 

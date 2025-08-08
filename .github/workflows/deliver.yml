@@ -47,6 +47,6 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: dragonejt
-          SENTRY_PROJECT: hakase
+          SENTRY_PROJECT: sibyl
         with:
           environment: production

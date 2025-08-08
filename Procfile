@@ -1,2 +1,2 @@
-web: gunicorn --worker-tmp-dir /dev/shm sibyl.wsgi
-release: python manage.py makemigrations && python manage.py migrate && python manage.py check --deploy
+web: "uvicorn hakase.asgi:application --host=0.0.0.0 --port=5000 --lifespan=off"
+release: "python manage.py makemigrations && python manage.py migrate && python manage.py collectstatic --noinput && python manage.py check --deploy"

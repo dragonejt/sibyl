@@ -34,24 +34,9 @@ class TestUserPsychoPassView(APITestCase):
         self.assertEqual(response.json(), UserPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_head_ok(self) -> None:
-        response = self.client.head(f"{self.url}?id={self.psycho_pass.user_id}")
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_head_forbidden(self) -> None:
-        user = get_user_model().objects.create(
-            username=get_random_string(10),
-            email=get_random_string(10),
-            password=get_random_string(10),
-        )
-        psycho_pass = UserPsychoPass.objects.create(platform=user, user_id=get_random_string(20))
-        response = self.client.head(f"{self.url}?id={psycho_pass.user_id}")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
     def test_post(self) -> None:
         user_id = get_random_string(20)
-        response = self.client.post(self.url, data={"userID": user_id}, format="json")
+        response = self.client.post(self.url, data={"user_id": user_id}, format="json")
         psycho_pass = UserPsychoPass.objects.get(platform=self.user, user_id=user_id)
         self.assertEqual(response.json().get("platform"), self.user.id)
         self.assertEqual(psycho_pass.platform.id, self.user.id)
@@ -87,7 +72,7 @@ class TestCommunityPsychoPassView(APITestCase):
         self.assertEqual(response.json(), CommunityPsychoPassSerializer(self.psycho_pass).data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_put(self) -> None:
+    def test_patch(self) -> None:
         self.assertEqual(self.psycho_pass.users.all().count(), 0)
         self.user_psycho_pass = UserPsychoPass.objects.create(
             platform=self.user, user_id=get_random_string(20)
@@ -95,11 +80,11 @@ class TestCommunityPsychoPassView(APITestCase):
         self.psycho_pass.users.add(self.user_psycho_pass)
         self.assertEqual(self.psycho_pass.users.all().count(), 1)
 
-        response = self.client.put(
+        response = self.client.patch(
             self.url,
             data={
                 "community_id": self.community.community_id,
-                "userID": self.user_psycho_pass.user_id,
+                "user_id": self.user_psycho_pass.user_id,
             },
             format="json",
         )
@@ -139,7 +124,7 @@ class TestIngestMessage(APITestCase):
                     },
                 },
                 "languages": ["en"],
-                "userID": get_random_string(20),
+                "user_id": get_random_string(20),
                 "community_id": self.community.community_id,
             },
             format="json",

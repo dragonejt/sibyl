@@ -1,17 +1,18 @@
 from http import HTTPStatus
+
 from django.shortcuts import get_object_or_404
-from rest_framework import status
-from rest_framework.permissions import IsAdminUser
-from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.fields import CharField
 from drf_spectacular.utils import (
     OpenApiParameter,
     OpenApiResponse,
     extend_schema,
     inline_serializer,
 )
+from rest_framework import status
+from rest_framework.fields import CharField
+from rest_framework.permissions import IsAdminUser
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from community.models import Community, CommunitySerializer
 from dominator.models import MemberDominator, MessageDominator

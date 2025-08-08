@@ -1,6 +1,15 @@
+from http import HTTPStatus
+
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import (
+    OpenApiParameter,
+    OpenApiResponse,
+    extend_schema,
+    inline_serializer,
+)
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
+from rest_framework.fields import CharField
 from rest_framework.permissions import IsAdminUser
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -23,12 +32,12 @@ from psychopass.models import (
 def ingest_message(request: Request) -> Response:
     set_user(
         {
-            "id": request.data.get("userID"),
-            "username": f"{request.user.username}/{request.data.get('userID')}",
+            "id": request.data.get("user_id"),
+            "username": f"{request.user.username}/{request.data.get('user_id')}",
         }
     )
     psycho_pass, _ = UserPsychoPass.objects.get_or_create(
-        platform=request.user, user_id=request.data.get("userID")
+        platform=request.user, user_id=request.data.get("user_id")
     )
     community = get_object_or_404(
         Community, platform=request.user, community_id=request.data.get("community_id")
@@ -81,6 +90,23 @@ def ingest_message(request: Request) -> Response:
 class UserPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
+    @extend_schema(
+        operation_id="read user psycho pass",
+        parameters=[
+            OpenApiParameter(
+                "id",
+                str,
+                required=True,
+                description="retrieves the user psycho pass with this id",
+            )
+        ],
+        responses={
+            "200": UserPsychoPassSerializer,
+            "400": OpenApiResponse(description="Missing field in query params or body"),
+            "404": OpenApiResponse(description="Item not found with provided details"),
+            "500": OpenApiResponse(description=HTTPStatus.INTERNAL_SERVER_ERROR.description),
+        },
+    )
     def get(self, request: Request) -> Response:
         set_user(
             {
@@ -92,32 +118,52 @@ class UserPsychoPassView(APIView):
 
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_200_OK)
 
-    def head(self, request: Request) -> Response:
-        set_user(
+    @extend_schema(
+        operation_id="create user psycho pass",
+        request=inline_serializer(
+            "create_community_serializer",
             {
-                "id": request.query_params.get("id"),
-                "username": f"{request.user.username}/{request.query_params.get('id')}",
-            }
-        )
-        psycho_pass = get_object_or_404(UserPsychoPass, user_id=request.query_params.get("id"))
-        if request.user == psycho_pass.platform:
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_403_FORBIDDEN)
-
+                "user_id": CharField(max_length=20),
+            },
+        ),
+        responses={
+            "200": UserPsychoPassSerializer,
+            "400": OpenApiResponse(description="Missing field in query params or body"),
+            "404": OpenApiResponse(description="Item not found with provided details"),
+            "500": OpenApiResponse(description=HTTPStatus.INTERNAL_SERVER_ERROR.description),
+        },
+    )
     def post(self, request: Request) -> Response:
         set_user(
             {
-                "id": request.data.get("userID"),
-                "username": f"{request.user.username}/{request.data.get('userID')}",
+                "id": request.data.get("user_id"),
+                "username": f"{request.user.username}/{request.data.get('user_id')}",
             }
         )
         psycho_pass = UserPsychoPass.objects.create(
-            platform=request.user, user_id=request.data.get("userID")
+            platform=request.user, user_id=request.data.get("user_id")
         )
         psycho_pass.save()
 
         return Response(UserPsychoPassSerializer(psycho_pass).data, status=status.HTTP_201_CREATED)
 
+    @extend_schema(
+        operation_id="delete user psycho pass",
+        parameters=[
+            OpenApiParameter(
+                "id",
+                str,
+                required=True,
+                description="deletes the user psycho pass with this id",
+            )
+        ],
+        responses={
+            "204": OpenApiResponse(description=HTTPStatus.NO_CONTENT.description),
+            "400": OpenApiResponse(description="Missing field in query params or body"),
+            "404": OpenApiResponse(description="Item not found with provided details"),
+            "500": OpenApiResponse(description=HTTPStatus.INTERNAL_SERVER_ERROR.description),
+        },
+    )
     def delete(self, request: Request) -> Response:
         set_user(
             {
@@ -134,6 +180,23 @@ class UserPsychoPassView(APIView):
 class CommunityPsychoPassView(APIView):
     permission_classes = [IsAdminUser]
 
+    @extend_schema(
+        operation_id="read community psycho pass",
+        parameters=[
+            OpenApiParameter(
+                "id",
+                str,
+                required=True,
+                description="retrieves the community psycho pass with this id",
+            )
+        ],
+        responses={
+            "200": CommunityPsychoPassSerializer,
+            "400": OpenApiResponse(description="Missing field in query params or body"),
+            "404": OpenApiResponse(description="Item not found with provided details"),
+            "500": OpenApiResponse(description=HTTPStatus.INTERNAL_SERVER_ERROR.description),
+        },
+    )
     def get(self, request: Request) -> Response:
         community = get_object_or_404(
             Community,
@@ -147,14 +210,30 @@ class CommunityPsychoPassView(APIView):
             status=status.HTTP_200_OK,
         )
 
-    def put(self, request: Request) -> Response:
+    @extend_schema(
+        operation_id="remove user from community",
+        request=inline_serializer(
+            "remove_user_serializer",
+            {
+                "user_id": CharField(max_length=20),
+                "community_id": CharField(max_length=20),
+            },
+        ),
+        responses={
+            "200": CommunityPsychoPassSerializer,
+            "400": OpenApiResponse(description="Missing field in query params or body"),
+            "404": OpenApiResponse(description="Item not found with provided details"),
+            "500": OpenApiResponse(description=HTTPStatus.INTERNAL_SERVER_ERROR.description),
+        },
+    )
+    def patch(self, request: Request) -> Response:
         community = get_object_or_404(
             Community,
             platform=request.user,
             community_id=request.data.get("community_id"),
         )
         community_psycho_pass = get_object_or_404(CommunityPsychoPass, community=community)
-        psycho_pass = get_object_or_404(UserPsychoPass, user_id=request.data.get("userID"))
+        psycho_pass = get_object_or_404(UserPsychoPass, user_id=request.data.get("user_id"))
         community_psycho_pass.users.remove(psycho_pass)
         community_psycho_pass.save()
 

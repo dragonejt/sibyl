@@ -36,7 +36,7 @@ class TestMemberDominatorView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), MemberDominatorSerializer(self.dominator).data)
 
-    def test_put(self) -> None:
+    def test_patch(self) -> None:
         self.assertEqual(
             self.dominator.toxicity_action,
             MemberDominator._meta.get_field("toxicity_action").get_default(),
@@ -48,7 +48,7 @@ class TestMemberDominatorView(APITestCase):
         toxicity_action = randint(0, 4)
         toxicity_threshold = random()
 
-        response = self.client.put(
+        response = self.client.patch(
             self.url,
             data={
                 "community_id": self.community.community_id,
@@ -94,7 +94,7 @@ class TestMessageDominatorView(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json(), MessageDominatorSerializer(self.dominator).data)
 
-    def test_put(self) -> None:
+    def test_patch(self) -> None:
         self.assertEqual(
             self.dominator.toxicity_action,
             MessageDominator._meta.get_field("toxicity_action").get_default(),
@@ -106,7 +106,7 @@ class TestMessageDominatorView(APITestCase):
         toxicity_action = randint(0, 4)
         toxicity_threshold = random()
 
-        response = self.client.put(
+        response = self.client.patch(
             self.url,
             data={
                 "community_id": self.community.community_id,

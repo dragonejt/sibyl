@@ -221,19 +221,20 @@ SECURE_HSTS_PRELOAD = not DEBUG
 
 # Sentry
 # https://docs.sentry.io/platforms/python/integrations/django/
+
 if DEBUG is False:
     sentry_init(
         dsn="https://67b36f9ddcd9ed33632c7f64076b76d7@o4507124907638784.ingest.us.sentry.io/4509806448607232",
-        # Set traces_sample_rate to 1.0 to capture 100%
-        # of transactions for performance monitoring.
-        traces_sample_rate=1 / 10,
-        # Set profiles_sample_rate to 1.0 to profile 100%
-        # of sampled transactions.
-        # We recommend adjusting this value in production.
-        profiles_sample_rate=1,
         enable_tracing=True,
+        traces_sample_rate=1 / 10,
+        profiles_sample_rate=1,
+        profile_session_sample_rate=1.0,
+        profile_lifecycle="trace",
         send_default_pii=True,
         environment=getenv("ENV"),
+        _experiments={
+            "enable_logs": True,
+        },
     )
 
 
